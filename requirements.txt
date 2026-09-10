@@ -1,0 +1,53 @@
+# Reproduction environment for this repository — the FULL set, pinned.
+#
+# WHY THIS FILE EXISTS SEPARATELY FROM `singularity/requirements.txt`.
+# That file is the CLUSTER JOB image set: `singularity/run_job.sh` pip-installs it at the
+# start of every job, so anything added there is paid for by every job, including the ones
+# that never import it. `lm_eval` alone pulls a large dependency tree and is used by exactly
+# one local script. So the split is deliberate:
+#
+#   requirements.txt (this file)   what REPRODUCING EVERY NUMBER IN THE PAPER needs
+#
+# Every pin below is the version measured in the project venv that produced the reported
+# results (`.venv/bin/python -m importlib.metadata`), verified 2026-09-02. `torch==2.7.1`
+# is the PyPI wheel that IS the cu126 build (the venv reports `2.7.1+cu126`, the local build
+# tag) — same convention as the singularity file, which documents it at length.
+#
+# The upstream DATASET revisions are pinned separately and enforced in code, in
+# `src/corpora.HF_DATASET_REVISIONS`; model revisions are recorded but not enforced, see
+# `src/corpora.MODEL_REVISIONS` and the caveat there.
+
+# ── core runtime (mirrors singularity/requirements.txt) ─────────────────────────
+torch==2.7.1
+transformers==5.14.1
+accelerate==1.14.0
+datasets==5.0.1
+numpy==2.5.1
+scikit-learn==1.9.0
+scipy==1.18.0
+safetensors==0.8.0
+tokenizers==0.22.2
+huggingface-hub==1.26.0
+einops==0.8.2
+tqdm==4.70.0
+PyYAML==6.0.3
+requests==2.34.2
+openai==2.53.0
+pandas==3.0.5
+agentdojo==0.1.35
+peft==0.20.0
+
+# ── needed to reproduce specific reported numbers, NOT installed on cluster jobs ─
+# lm_eval supplies the official IFEval instruction-checkers used by
+# tools/controls/general_utility_bench.py, which is where the instruction-adherence
+# number quoted in §7 (-15.2 pp at the deployed gpt-oss dose) comes from. An unpinned
+# harness version is the same defect class as an unpinned dataset: the score moves and
+# nothing records why.
+lm_eval==0.4.12
+# HTML stripping for the webpage carrier documents
+# (tools/controls/build_paper_injection_dataset.py: BeautifulSoup(html, "lxml")).
+beautifulsoup4==4.15.0
+lxml==6.1.2
+# async transport for the LLM judge and the narrow drift adjudicator
+# (src/judge.py, tools/controls/score_table.py, tools/controls/utility_judge.py).
+httpx==0.28.1

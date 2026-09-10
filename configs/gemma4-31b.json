@@ -1,0 +1,13 @@
+{
+  "model": "google/gemma-4-31b-it",
+  "probe_dir": "runs/gemma4-31b-it",
+  "direction": "dim_no_override_both",
+  "alpha": 8.0,
+  "layers": "4,28,36",
+  "match_sigma_to": "dim_no_override_both",
+  "max_new_single_turn": 2048,
+  "max_new_agentic": 4096,
+  "firing_corpora": ["paper_param", "paper_disjoint"],
+  "default_corpus": "paper_param",
+  "notes": "Certified on both webpage corpora with carrier documents, attacker wordings and framing templates held out. JSON corpora do not fire undefended on this model."
+}

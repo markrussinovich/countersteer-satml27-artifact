@@ -1,0 +1,13 @@
+{
+  "model": "zai-org/GLM-4.5-Air",
+  "probe_dir": "runs/glm45-air",
+  "direction": "dim_no_override_actioncentred",
+  "alpha": 8.0,
+  "layers": "20,24,28",
+  "match_sigma_to": "dim_no_override_both",
+  "max_new_single_turn": 8192,
+  "max_new_agentic": 8192,
+  "firing_corpora": ["paper_param"],
+  "default_corpus": "paper_param",
+  "notes": "106B MoE; needs device=auto over >=3x80GB GPUs. Certified on its firing corpus (webpage parameter manipulation) plus the full agentic grid."
+}

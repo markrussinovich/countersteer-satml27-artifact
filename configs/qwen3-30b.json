@@ -1,0 +1,13 @@
+{
+  "model": "Qwen/Qwen3-30B-A3B-Thinking-2507",
+  "probe_dir": "runs/qwen3-30b-thinking",
+  "direction": "dim_no_override_both",
+  "alpha": 12.0,
+  "layers": "8,20,32",
+  "match_sigma_to": "",
+  "max_new_single_turn": 4096,
+  "max_new_agentic": 4096,
+  "firing_corpora": ["paper_param", "paper_disjoint", "shipped", "param_abuse"],
+  "default_corpus": "paper_disjoint",
+  "notes": "Anchor model. Own-sigma scaling (empty match_sigma_to). Thinking model: never evaluate below 2048 tokens/turn (the clean arm itself collapses)."
+}

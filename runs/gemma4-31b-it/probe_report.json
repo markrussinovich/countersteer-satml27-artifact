@@ -1,0 +1,857 @@
+{
+  "layers": [
+    0,
+    4,
+    8,
+    12,
+    16,
+    20,
+    24,
+    28,
+    32,
+    36,
+    40,
+    44,
+    48,
+    52,
+    56
+  ],
+  "roles": [
+    "system",
+    "user",
+    "cot",
+    "assistant",
+    "tool"
+  ],
+  "site": "pre_feedforward_layernorm",
+  "C": 0.005,
+  "corpus_kind": "paper",
+  "n_seqs": 249,
+  "report": {
+    "0": {
+      "acc": {},
+      "mn_acc": 0.4342242681727386,
+      "mean_norm": 692.4653930664062,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0,
+          "dim_tool_ovr": 0.2800515294075012,
+          "dim_tool_vs_user_system": 0.20881333947181702,
+          "dim_tool_vs_rest": 0.2802300751209259,
+          "dim_user_vs_rest": 0.14460405707359314,
+          "mn_user": -0.13159826397895813
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.2800515294075012,
+          "dim_tool_ovr": 0.9999999403953552,
+          "dim_tool_vs_user_system": 0.3801499903202057,
+          "dim_tool_vs_rest": 0.9999987483024597,
+          "dim_user_vs_rest": 0.7651606202125549,
+          "mn_user": 0.13504362106323242
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.20881333947181702,
+          "dim_tool_ovr": 0.3801499903202057,
+          "dim_tool_vs_user_system": 1.0000001192092896,
+          "dim_tool_vs_rest": 0.3799792528152466,
+          "dim_user_vs_rest": -0.27368786931037903,
+          "mn_user": -0.23559023439884186
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.2802300751209259,
+          "dim_tool_ovr": 0.9999987483024597,
+          "dim_tool_vs_user_system": 0.3799792528152466,
+          "dim_tool_vs_rest": 1.0000001192092896,
+          "dim_user_vs_rest": 0.7652473449707031,
+          "mn_user": 0.13518500328063965
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": 0.14460405707359314,
+          "dim_tool_ovr": 0.7651606202125549,
+          "dim_tool_vs_user_system": -0.27368786931037903,
+          "dim_tool_vs_rest": 0.7652473449707031,
+          "dim_user_vs_rest": 1.0,
+          "mn_user": 0.3247219920158386
+        },
+        "mn_user": {
+          "mn_tool": -0.13159826397895813,
+          "dim_tool_ovr": 0.13504362106323242,
+          "dim_tool_vs_user_system": -0.23559023439884186,
+          "dim_tool_vs_rest": 0.13518500328063965,
+          "dim_user_vs_rest": 0.3247219920158386,
+          "mn_user": 1.0
+        }
+      }
+    },
+    "4": {
+      "acc": {},
+      "mn_acc": 0.5337497338349066,
+      "mean_norm": 116.81592559814453,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0,
+          "dim_tool_ovr": 0.37130871415138245,
+          "dim_tool_vs_user_system": 0.3355754613876343,
+          "dim_tool_vs_rest": 0.3699600100517273,
+          "dim_user_vs_rest": 0.07142274081707001,
+          "mn_user": -0.25055429339408875
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.37130871415138245,
+          "dim_tool_ovr": 1.0,
+          "dim_tool_vs_user_system": 0.49485743045806885,
+          "dim_tool_vs_rest": 0.9997400045394897,
+          "dim_user_vs_rest": 0.5318158268928528,
+          "mn_user": 0.11636114120483398
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.3355754613876343,
+          "dim_tool_ovr": 0.49485743045806885,
+          "dim_tool_vs_user_system": 0.9999999403953552,
+          "dim_tool_vs_rest": 0.5063670873641968,
+          "dim_user_vs_rest": -0.448133647441864,
+          "mn_user": -0.28285327553749084
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.3699600100517273,
+          "dim_tool_ovr": 0.9997400045394897,
+          "dim_tool_vs_user_system": 0.5063670873641968,
+          "dim_tool_vs_rest": 1.0,
+          "dim_user_vs_rest": 0.520229697227478,
+          "mn_user": 0.11569467931985855
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": 0.07142274081707001,
+          "dim_tool_ovr": 0.5318158268928528,
+          "dim_tool_vs_user_system": -0.448133647441864,
+          "dim_tool_vs_rest": 0.520229697227478,
+          "dim_user_vs_rest": 0.9999999403953552,
+          "mn_user": 0.4058551788330078
+        },
+        "mn_user": {
+          "mn_tool": -0.25055429339408875,
+          "dim_tool_ovr": 0.11636114120483398,
+          "dim_tool_vs_user_system": -0.28285327553749084,
+          "dim_tool_vs_rest": 0.11569467931985855,
+          "dim_user_vs_rest": 0.4058551788330078,
+          "mn_user": 1.0
+        }
+      }
+    },
+    "8": {
+      "acc": {},
+      "mn_acc": 0.7497389047179664,
+      "mean_norm": 259.978515625,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0,
+          "dim_tool_ovr": 0.5566522479057312,
+          "dim_tool_vs_user_system": 0.5042470097541809,
+          "dim_tool_vs_rest": 0.556763768196106,
+          "dim_user_vs_rest": -0.013310298323631287,
+          "mn_user": -0.40969955921173096
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.5566522479057312,
+          "dim_tool_ovr": 0.9999998807907104,
+          "dim_tool_vs_user_system": 0.8432508111000061,
+          "dim_tool_vs_rest": 0.9999973773956299,
+          "dim_user_vs_rest": 0.042093899101018906,
+          "mn_user": -0.047875743359327316
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.5042470097541809,
+          "dim_tool_ovr": 0.8432508111000061,
+          "dim_tool_vs_user_system": 1.0,
+          "dim_tool_vs_rest": 0.8432367444038391,
+          "dim_user_vs_rest": -0.4719652533531189,
+          "mn_user": -0.28843072056770325
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.556763768196106,
+          "dim_tool_ovr": 0.9999973773956299,
+          "dim_tool_vs_user_system": 0.8432367444038391,
+          "dim_tool_vs_rest": 1.0,
+          "dim_user_vs_rest": 0.04234079644083977,
+          "mn_user": -0.047891393303871155
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": -0.013310298323631287,
+          "dim_tool_ovr": 0.042093899101018906,
+          "dim_tool_vs_user_system": -0.4719652533531189,
+          "dim_tool_vs_rest": 0.04234079644083977,
+          "dim_user_vs_rest": 1.0,
+          "mn_user": 0.5060802102088928
+        },
+        "mn_user": {
+          "mn_tool": -0.40969955921173096,
+          "dim_tool_ovr": -0.047875743359327316,
+          "dim_tool_vs_user_system": -0.28843072056770325,
+          "dim_tool_vs_rest": -0.047891393303871155,
+          "dim_user_vs_rest": 0.5060802102088928,
+          "mn_user": 1.0
+        }
+      }
+    },
+    "12": {
+      "acc": {},
+      "mn_acc": 0.7282530444216866,
+      "mean_norm": 415.4226379394531,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0000001192092896,
+          "dim_tool_ovr": 0.4619498550891876,
+          "dim_tool_vs_user_system": 0.4217437505722046,
+          "dim_tool_vs_rest": 0.46141526103019714,
+          "dim_user_vs_rest": -0.07052113115787506,
+          "mn_user": -0.47875744104385376
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.4619498550891876,
+          "dim_tool_ovr": 1.0000001192092896,
+          "dim_tool_vs_user_system": 0.9226836562156677,
+          "dim_tool_vs_rest": 0.9999980330467224,
+          "dim_user_vs_rest": -0.188102588057518,
+          "mn_user": -0.1253071278333664
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.4217437505722046,
+          "dim_tool_ovr": 0.9226836562156677,
+          "dim_tool_vs_user_system": 1.0000001192092896,
+          "dim_tool_vs_rest": 0.9228367209434509,
+          "dim_user_vs_rest": -0.5173451900482178,
+          "mn_user": -0.24695083498954773
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.46141526103019714,
+          "dim_tool_ovr": 0.9999980330467224,
+          "dim_tool_vs_user_system": 0.9228367209434509,
+          "dim_tool_vs_rest": 1.0000001192092896,
+          "dim_user_vs_rest": -0.18877780437469482,
+          "mn_user": -0.1251906305551529
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": -0.07052113115787506,
+          "dim_tool_ovr": -0.188102588057518,
+          "dim_tool_vs_user_system": -0.5173451900482178,
+          "dim_tool_vs_rest": -0.18877780437469482,
+          "dim_user_vs_rest": 0.9999999403953552,
+          "mn_user": 0.4293191134929657
+        },
+        "mn_user": {
+          "mn_tool": -0.47875744104385376,
+          "dim_tool_ovr": -0.1253071278333664,
+          "dim_tool_vs_user_system": -0.24695083498954773,
+          "dim_tool_vs_rest": -0.1251906305551529,
+          "dim_user_vs_rest": 0.4293191134929657,
+          "mn_user": 1.0
+        }
+      }
+    },
+    "16": {
+      "acc": {},
+      "mn_acc": 0.7128965859890695,
+      "mean_norm": 343.8528747558594,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0,
+          "dim_tool_ovr": 0.46081990003585815,
+          "dim_tool_vs_user_system": 0.4374760091304779,
+          "dim_tool_vs_rest": 0.46144458651542664,
+          "dim_user_vs_rest": -0.14358748495578766,
+          "mn_user": -0.4717520475387573
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.46081990003585815,
+          "dim_tool_ovr": 1.0,
+          "dim_tool_vs_user_system": 0.9238755106925964,
+          "dim_tool_vs_rest": 0.999997079372406,
+          "dim_user_vs_rest": -0.3053596317768097,
+          "mn_user": -0.15427528321743011
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.4374760091304779,
+          "dim_tool_ovr": 0.9238755106925964,
+          "dim_tool_vs_user_system": 0.9999998807907104,
+          "dim_tool_vs_rest": 0.9237756729125977,
+          "dim_user_vs_rest": -0.5925410389900208,
+          "mn_user": -0.264678031206131
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.46144458651542664,
+          "dim_tool_ovr": 0.999997079372406,
+          "dim_tool_vs_user_system": 0.9237756729125977,
+          "dim_tool_vs_rest": 1.0,
+          "dim_user_vs_rest": -0.3046715259552002,
+          "mn_user": -0.15446244180202484
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": -0.14358748495578766,
+          "dim_tool_ovr": -0.3053596317768097,
+          "dim_tool_vs_user_system": -0.5925410389900208,
+          "dim_tool_vs_rest": -0.3046715259552002,
+          "dim_user_vs_rest": 1.0,
+          "mn_user": 0.4545583426952362
+        },
+        "mn_user": {
+          "mn_tool": -0.4717520475387573,
+          "dim_tool_ovr": -0.15427528321743011,
+          "dim_tool_vs_user_system": -0.264678031206131,
+          "dim_tool_vs_rest": -0.15446244180202484,
+          "dim_user_vs_rest": 0.4545583426952362,
+          "mn_user": 1.0
+        }
+      }
+    },
+    "20": {
+      "acc": {},
+      "mn_acc": 0.6952891313385315,
+      "mean_norm": 422.4969177246094,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0,
+          "dim_tool_ovr": 0.45839762687683105,
+          "dim_tool_vs_user_system": 0.39277106523513794,
+          "dim_tool_vs_rest": 0.457585871219635,
+          "dim_user_vs_rest": -0.1317387819290161,
+          "mn_user": -0.42286553978919983
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.45839762687683105,
+          "dim_tool_ovr": 1.0000001192092896,
+          "dim_tool_vs_user_system": 0.9325993657112122,
+          "dim_tool_vs_rest": 0.9999935626983643,
+          "dim_user_vs_rest": -0.5438719391822815,
+          "mn_user": -0.14756959676742554
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.39277106523513794,
+          "dim_tool_ovr": 0.9325993657112122,
+          "dim_tool_vs_user_system": 1.0000001192092896,
+          "dim_tool_vs_rest": 0.933251142501831,
+          "dim_user_vs_rest": -0.7668372988700867,
+          "mn_user": -0.22192910313606262
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.457585871219635,
+          "dim_tool_ovr": 0.9999935626983643,
+          "dim_tool_vs_user_system": 0.933251142501831,
+          "dim_tool_vs_rest": 0.9999998807907104,
+          "dim_user_vs_rest": -0.5456305146217346,
+          "mn_user": -0.14734722673892975
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": -0.1317387819290161,
+          "dim_tool_ovr": -0.5438719391822815,
+          "dim_tool_vs_user_system": -0.7668372988700867,
+          "dim_tool_vs_rest": -0.5456305146217346,
+          "dim_user_vs_rest": 1.0000001192092896,
+          "mn_user": 0.35032257437705994
+        },
+        "mn_user": {
+          "mn_tool": -0.42286553978919983,
+          "dim_tool_ovr": -0.14756959676742554,
+          "dim_tool_vs_user_system": -0.22192910313606262,
+          "dim_tool_vs_rest": -0.14734722673892975,
+          "dim_user_vs_rest": 0.35032257437705994,
+          "mn_user": 1.0
+        }
+      }
+    },
+    "24": {
+      "acc": {},
+      "mn_acc": 0.7204759538849964,
+      "mean_norm": 384.4048156738281,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0,
+          "dim_tool_ovr": 0.4705447256565094,
+          "dim_tool_vs_user_system": 0.4421350657939911,
+          "dim_tool_vs_rest": 0.47048476338386536,
+          "dim_user_vs_rest": -0.10825623571872711,
+          "mn_user": -0.24113906919956207
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.4705447256565094,
+          "dim_tool_ovr": 1.0000001192092896,
+          "dim_tool_vs_user_system": 0.9295024871826172,
+          "dim_tool_vs_rest": 1.0000001192092896,
+          "dim_user_vs_rest": -0.14097940921783447,
+          "mn_user": -0.09109248965978622
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.4421350657939911,
+          "dim_tool_ovr": 0.9295024871826172,
+          "dim_tool_vs_user_system": 1.0000001192092896,
+          "dim_tool_vs_rest": 0.929476261138916,
+          "dim_user_vs_rest": -0.4284268319606781,
+          "mn_user": -0.1930326670408249
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.47048476338386536,
+          "dim_tool_ovr": 1.0000001192092896,
+          "dim_tool_vs_user_system": 0.929476261138916,
+          "dim_tool_vs_rest": 0.9999999403953552,
+          "dim_user_vs_rest": -0.14099417626857758,
+          "mn_user": -0.09107780456542969
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": -0.10825623571872711,
+          "dim_tool_ovr": -0.14097940921783447,
+          "dim_tool_vs_user_system": -0.4284268319606781,
+          "dim_tool_vs_rest": -0.14099417626857758,
+          "dim_user_vs_rest": 1.0,
+          "mn_user": 0.40798619389533997
+        },
+        "mn_user": {
+          "mn_tool": -0.24113906919956207,
+          "dim_tool_ovr": -0.09109248965978622,
+          "dim_tool_vs_user_system": -0.1930326670408249,
+          "dim_tool_vs_rest": -0.09107780456542969,
+          "dim_user_vs_rest": 0.40798619389533997,
+          "mn_user": 1.0
+        }
+      }
+    },
+    "28": {
+      "acc": {},
+      "mn_acc": 0.7732222706670858,
+      "mean_norm": 409.3443908691406,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0000001192092896,
+          "dim_tool_ovr": 0.39659908413887024,
+          "dim_tool_vs_user_system": 0.3746039569377899,
+          "dim_tool_vs_rest": 0.39654895663261414,
+          "dim_user_vs_rest": -0.09650274366140366,
+          "mn_user": -0.1745319366455078
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.39659908413887024,
+          "dim_tool_ovr": 1.0,
+          "dim_tool_vs_user_system": 0.9514687061309814,
+          "dim_tool_vs_rest": 1.0,
+          "dim_user_vs_rest": -0.09948417544364929,
+          "mn_user": -0.04756786301732063
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.3746039569377899,
+          "dim_tool_ovr": 0.9514687061309814,
+          "dim_tool_vs_user_system": 1.0,
+          "dim_tool_vs_rest": 0.9514668583869934,
+          "dim_user_vs_rest": -0.3535223603248596,
+          "mn_user": -0.12248824536800385
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.39654895663261414,
+          "dim_tool_ovr": 1.0,
+          "dim_tool_vs_user_system": 0.9514668583869934,
+          "dim_tool_vs_rest": 1.0,
+          "dim_user_vs_rest": -0.09940320998430252,
+          "mn_user": -0.04756391793489456
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": -0.09650274366140366,
+          "dim_tool_ovr": -0.09948417544364929,
+          "dim_tool_vs_user_system": -0.3535223603248596,
+          "dim_tool_vs_rest": -0.09940320998430252,
+          "dim_user_vs_rest": 0.9999999403953552,
+          "mn_user": 0.3197035789489746
+        },
+        "mn_user": {
+          "mn_tool": -0.1745319366455078,
+          "dim_tool_ovr": -0.04756786301732063,
+          "dim_tool_vs_user_system": -0.12248824536800385,
+          "dim_tool_vs_rest": -0.04756391793489456,
+          "dim_user_vs_rest": 0.3197035789489746,
+          "mn_user": 1.0000001192092896
+        }
+      }
+    },
+    "32": {
+      "acc": {},
+      "mn_acc": 0.5440262413432972,
+      "mean_norm": 330.976318359375,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0000001192092896,
+          "dim_tool_ovr": 0.4037521481513977,
+          "dim_tool_vs_user_system": 0.36443427205085754,
+          "dim_tool_vs_rest": 0.40380755066871643,
+          "dim_user_vs_rest": -0.10602188110351562,
+          "mn_user": -0.21971212327480316
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.4037521481513977,
+          "dim_tool_ovr": 0.9999999403953552,
+          "dim_tool_vs_user_system": 0.9665599465370178,
+          "dim_tool_vs_rest": 0.9999976754188538,
+          "dim_user_vs_rest": -0.39719825983047485,
+          "mn_user": -0.08332451432943344
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.36443427205085754,
+          "dim_tool_ovr": 0.9665599465370178,
+          "dim_tool_vs_user_system": 1.0,
+          "dim_tool_vs_rest": 0.9668068289756775,
+          "dim_user_vs_rest": -0.5777265429496765,
+          "mn_user": -0.14342771470546722
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.40380755066871643,
+          "dim_tool_ovr": 0.9999976754188538,
+          "dim_tool_vs_user_system": 0.9668068289756775,
+          "dim_tool_vs_rest": 0.9999999403953552,
+          "dim_user_vs_rest": -0.3984076678752899,
+          "mn_user": -0.08334910869598389
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": -0.10602188110351562,
+          "dim_tool_ovr": -0.39719825983047485,
+          "dim_tool_vs_user_system": -0.5777265429496765,
+          "dim_tool_vs_rest": -0.3984076678752899,
+          "dim_user_vs_rest": 1.0,
+          "mn_user": 0.332526296377182
+        },
+        "mn_user": {
+          "mn_tool": -0.21971212327480316,
+          "dim_tool_ovr": -0.08332451432943344,
+          "dim_tool_vs_user_system": -0.14342771470546722,
+          "dim_tool_vs_rest": -0.08334910869598389,
+          "dim_user_vs_rest": 0.332526296377182,
+          "mn_user": 1.0
+        }
+      }
+    },
+    "36": {
+      "acc": {},
+      "mn_acc": 0.7362937651460613,
+      "mean_norm": 301.70147705078125,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0,
+          "dim_tool_ovr": 0.4171256124973297,
+          "dim_tool_vs_user_system": 0.39998722076416016,
+          "dim_tool_vs_rest": 0.41709813475608826,
+          "dim_user_vs_rest": -0.17235851287841797,
+          "mn_user": -0.32537341117858887
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.4171256124973297,
+          "dim_tool_ovr": 1.0,
+          "dim_tool_vs_user_system": 0.9308592081069946,
+          "dim_tool_vs_rest": 1.0,
+          "dim_user_vs_rest": -0.40056294202804565,
+          "mn_user": -0.11386583000421524
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.39998722076416016,
+          "dim_tool_ovr": 0.9308592081069946,
+          "dim_tool_vs_user_system": 1.0000001192092896,
+          "dim_tool_vs_rest": 0.930912971496582,
+          "dim_user_vs_rest": -0.6537466049194336,
+          "mn_user": -0.16648080945014954
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.41709813475608826,
+          "dim_tool_ovr": 1.0,
+          "dim_tool_vs_user_system": 0.930912971496582,
+          "dim_tool_vs_rest": 1.0,
+          "dim_user_vs_rest": -0.4006589651107788,
+          "mn_user": -0.11386170238256454
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": -0.17235851287841797,
+          "dim_tool_ovr": -0.40056294202804565,
+          "dim_tool_vs_user_system": -0.6537466049194336,
+          "dim_tool_vs_rest": -0.4006589651107788,
+          "dim_user_vs_rest": 0.9999998807907104,
+          "mn_user": 0.34954994916915894
+        },
+        "mn_user": {
+          "mn_tool": -0.32537341117858887,
+          "dim_tool_ovr": -0.11386583000421524,
+          "dim_tool_vs_user_system": -0.16648080945014954,
+          "dim_tool_vs_rest": -0.11386170238256454,
+          "dim_user_vs_rest": 0.34954994916915894,
+          "mn_user": 1.0000001192092896
+        }
+      }
+    },
+    "40": {
+      "acc": {},
+      "mn_acc": 0.7537136367784391,
+      "mean_norm": 214.77407836914062,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0000001192092896,
+          "dim_tool_ovr": 0.42924734950065613,
+          "dim_tool_vs_user_system": 0.42595726251602173,
+          "dim_tool_vs_rest": 0.42927390336990356,
+          "dim_user_vs_rest": -0.17268623411655426,
+          "mn_user": -0.3319465219974518
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.42924734950065613,
+          "dim_tool_ovr": 1.0,
+          "dim_tool_vs_user_system": 0.875234842300415,
+          "dim_tool_vs_rest": 0.9999998807907104,
+          "dim_user_vs_rest": -0.2653660774230957,
+          "mn_user": -0.09726214408874512
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.42595726251602173,
+          "dim_tool_ovr": 0.875234842300415,
+          "dim_tool_vs_user_system": 1.0,
+          "dim_tool_vs_rest": 0.8752925992012024,
+          "dim_user_vs_rest": -0.6358375549316406,
+          "mn_user": -0.189396470785141
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.42927390336990356,
+          "dim_tool_ovr": 0.9999998807907104,
+          "dim_tool_vs_user_system": 0.8752925992012024,
+          "dim_tool_vs_rest": 1.0000001192092896,
+          "dim_user_vs_rest": -0.2654925584793091,
+          "mn_user": -0.09727834165096283
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": -0.17268623411655426,
+          "dim_tool_ovr": -0.2653660774230957,
+          "dim_tool_vs_user_system": -0.6358375549316406,
+          "dim_tool_vs_rest": -0.2654925584793091,
+          "dim_user_vs_rest": 0.9999998807907104,
+          "mn_user": 0.37019824981689453
+        },
+        "mn_user": {
+          "mn_tool": -0.3319465219974518,
+          "dim_tool_ovr": -0.09726214408874512,
+          "dim_tool_vs_user_system": -0.189396470785141,
+          "dim_tool_vs_rest": -0.09727834165096283,
+          "dim_user_vs_rest": 0.37019824981689453,
+          "mn_user": 1.0
+        }
+      }
+    },
+    "44": {
+      "acc": {},
+      "mn_acc": 0.5612230412784036,
+      "mean_norm": 174.8556365966797,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0,
+          "dim_tool_ovr": 0.23442351818084717,
+          "dim_tool_vs_user_system": 0.227974534034729,
+          "dim_tool_vs_rest": 0.23435676097869873,
+          "dim_user_vs_rest": -0.11419277638196945,
+          "mn_user": -0.4283478856086731
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.23442351818084717,
+          "dim_tool_ovr": 1.0,
+          "dim_tool_vs_user_system": 0.9394212961196899,
+          "dim_tool_vs_rest": 0.9999997615814209,
+          "dim_user_vs_rest": -0.5986667275428772,
+          "mn_user": -0.07583250105381012
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.227974534034729,
+          "dim_tool_ovr": 0.9394212961196899,
+          "dim_tool_vs_user_system": 1.0,
+          "dim_tool_vs_rest": 0.9393824934959412,
+          "dim_user_vs_rest": -0.8142690658569336,
+          "mn_user": -0.12879906594753265
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.23435676097869873,
+          "dim_tool_ovr": 0.9999997615814209,
+          "dim_tool_vs_user_system": 0.9393824934959412,
+          "dim_tool_vs_rest": 0.9999999403953552,
+          "dim_user_vs_rest": -0.5986164808273315,
+          "mn_user": -0.07580942660570145
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": -0.11419277638196945,
+          "dim_tool_ovr": -0.5986667275428772,
+          "dim_tool_vs_user_system": -0.8142690658569336,
+          "dim_tool_vs_rest": -0.5986164808273315,
+          "dim_user_vs_rest": 1.0,
+          "mn_user": 0.23883482813835144
+        },
+        "mn_user": {
+          "mn_tool": -0.4283478856086731,
+          "dim_tool_ovr": -0.07583250105381012,
+          "dim_tool_vs_user_system": -0.12879906594753265,
+          "dim_tool_vs_rest": -0.07580942660570145,
+          "dim_user_vs_rest": 0.23883482813835144,
+          "mn_user": 1.0
+        }
+      }
+    },
+    "48": {
+      "acc": {},
+      "mn_acc": 0.544203684738854,
+      "mean_norm": 154.92247009277344,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0,
+          "dim_tool_ovr": 0.2043961137533188,
+          "dim_tool_vs_user_system": 0.195736825466156,
+          "dim_tool_vs_rest": 0.20434728264808655,
+          "dim_user_vs_rest": -0.09668596088886261,
+          "mn_user": -0.43643563985824585
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.2043961137533188,
+          "dim_tool_ovr": 1.0,
+          "dim_tool_vs_user_system": 0.9496094584465027,
+          "dim_tool_vs_rest": 0.9999949932098389,
+          "dim_user_vs_rest": -0.69474196434021,
+          "mn_user": -0.07010068744421005
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.195736825466156,
+          "dim_tool_ovr": 0.9496094584465027,
+          "dim_tool_vs_user_system": 0.9999999403953552,
+          "dim_tool_vs_rest": 0.9491216540336609,
+          "dim_user_vs_rest": -0.8668115735054016,
+          "mn_user": -0.1187128946185112
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.20434728264808655,
+          "dim_tool_ovr": 0.9999949932098389,
+          "dim_tool_vs_user_system": 0.9491216540336609,
+          "dim_tool_vs_rest": 1.0,
+          "dim_user_vs_rest": -0.6937019228935242,
+          "mn_user": -0.07003648579120636
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": -0.09668596088886261,
+          "dim_tool_ovr": -0.69474196434021,
+          "dim_tool_vs_user_system": -0.8668115735054016,
+          "dim_tool_vs_rest": -0.6937019228935242,
+          "dim_user_vs_rest": 1.0,
+          "mn_user": 0.20974276959896088
+        },
+        "mn_user": {
+          "mn_tool": -0.43643563985824585,
+          "dim_tool_ovr": -0.07010068744421005,
+          "dim_tool_vs_user_system": -0.1187128946185112,
+          "dim_tool_vs_rest": -0.07003648579120636,
+          "dim_user_vs_rest": 0.20974276959896088,
+          "mn_user": 1.0000001192092896
+        }
+      }
+    },
+    "52": {
+      "acc": {},
+      "mn_acc": 0.5271944678219077,
+      "mean_norm": 90.83157348632812,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0,
+          "dim_tool_ovr": 0.27753114700317383,
+          "dim_tool_vs_user_system": 0.28592512011528015,
+          "dim_tool_vs_rest": 0.27759841084480286,
+          "dim_user_vs_rest": -0.12339197099208832,
+          "mn_user": -0.3903133273124695
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.27753114700317383,
+          "dim_tool_ovr": 1.0,
+          "dim_tool_vs_user_system": 0.8339444398880005,
+          "dim_tool_vs_rest": 1.0000001192092896,
+          "dim_user_vs_rest": -0.2986430823802948,
+          "mn_user": -0.10283774137496948
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.28592512011528015,
+          "dim_tool_ovr": 0.8339444398880005,
+          "dim_tool_vs_user_system": 0.9999999403953552,
+          "dim_tool_vs_rest": 0.834108829498291,
+          "dim_user_vs_rest": -0.732743501663208,
+          "mn_user": -0.1760910004377365
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.27759841084480286,
+          "dim_tool_ovr": 1.0000001192092896,
+          "dim_tool_vs_user_system": 0.834108829498291,
+          "dim_tool_vs_rest": 1.0000001192092896,
+          "dim_user_vs_rest": -0.29889392852783203,
+          "mn_user": -0.10286509245634079
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": -0.12339197099208832,
+          "dim_tool_ovr": -0.2986430823802948,
+          "dim_tool_vs_user_system": -0.732743501663208,
+          "dim_tool_vs_rest": -0.29889392852783203,
+          "dim_user_vs_rest": 1.0000001192092896,
+          "mn_user": 0.25256505608558655
+        },
+        "mn_user": {
+          "mn_tool": -0.3903133273124695,
+          "dim_tool_ovr": -0.10283774137496948,
+          "dim_tool_vs_user_system": -0.1760910004377365,
+          "dim_tool_vs_rest": -0.10286509245634079,
+          "dim_user_vs_rest": 0.25256505608558655,
+          "mn_user": 1.0
+        }
+      }
+    },
+    "56": {
+      "acc": {},
+      "mn_acc": 0.5821765713880129,
+      "mean_norm": 81.17277526855469,
+      "dir_cos": {
+        "mn_tool": {
+          "mn_tool": 1.0,
+          "dim_tool_ovr": 0.3218647241592407,
+          "dim_tool_vs_user_system": 0.3313513994216919,
+          "dim_tool_vs_rest": 0.32173702120780945,
+          "dim_user_vs_rest": -0.1253955364227295,
+          "mn_user": -0.45161762833595276
+        },
+        "dim_tool_ovr": {
+          "mn_tool": 0.3218647241592407,
+          "dim_tool_ovr": 1.0000001192092896,
+          "dim_tool_vs_user_system": 0.42183718085289,
+          "dim_tool_vs_rest": 0.9999997019767761,
+          "dim_user_vs_rest": 0.22998952865600586,
+          "mn_user": -0.1648644506931305
+        },
+        "dim_tool_vs_user_system": {
+          "mn_tool": 0.3313513994216919,
+          "dim_tool_ovr": 0.42183718085289,
+          "dim_tool_vs_user_system": 1.0,
+          "dim_tool_vs_rest": 0.42133697867393494,
+          "dim_user_vs_rest": -0.7563510537147522,
+          "mn_user": -0.2927205562591553
+        },
+        "dim_tool_vs_rest": {
+          "mn_tool": 0.32173702120780945,
+          "dim_tool_ovr": 0.9999997019767761,
+          "dim_tool_vs_user_system": 0.42133697867393494,
+          "dim_tool_vs_rest": 1.0,
+          "dim_user_vs_rest": 0.23050452768802643,
+          "mn_user": -0.16480818390846252
+        },
+        "dim_user_vs_rest": {
+          "mn_tool": -0.1253955364227295,
+          "dim_tool_ovr": 0.22998952865600586,
+          "dim_tool_vs_user_system": -0.7563510537147522,
+          "dim_tool_vs_rest": 0.23050452768802643,
+          "dim_user_vs_rest": 1.0000001192092896,
+          "mn_user": 0.27187642455101013
+        },
+        "mn_user": {
+          "mn_tool": -0.45161762833595276,
+          "dim_tool_ovr": -0.1648644506931305,
+          "dim_tool_vs_user_system": -0.2927205562591553,
+          "dim_tool_vs_rest": -0.16480818390846252,
+          "dim_user_vs_rest": 0.27187642455101013,
+          "mn_user": 1.0
+        }
+      }
+    }
+  }
+}

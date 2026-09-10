@@ -1,0 +1,13 @@
+{
+  "model": "openai/gpt-oss-20b",
+  "probe_dir": "runs/gpt-oss-20b-userabl",
+  "direction": "combo_ovr8_pat1",
+  "alpha": 8.06,
+  "layers": "12,16,20",
+  "match_sigma_to": "dim_no_override",
+  "max_new_single_turn": 1024,
+  "max_new_agentic": 4096,
+  "firing_corpora": ["paper_param", "paper_disjoint", "shipped", "param_abuse"],
+  "default_corpus": "paper_disjoint",
+  "notes": "Anchor model. The deployed cell used by every AgentDojo/AgentDyn/adaptive battery. Some archived single-turn confirm artifacts carry the pre-scaled-vector convention (alpha 1.0, no sigma matching); this config is the battery convention."
+}

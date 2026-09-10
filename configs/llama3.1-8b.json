@@ -1,0 +1,13 @@
+{
+  "model": "meta-llama/Llama-3.1-8B-Instruct",
+  "probe_dir": "runs/llama31-8b",
+  "direction": "dim_no_override_achf",
+  "alpha": 5.0,
+  "layers": "12,16,20",
+  "match_sigma_to": "dim_no_override_achf",
+  "max_new_single_turn": 1024,
+  "max_new_agentic": 4096,
+  "firing_corpora": ["paper_disjoint"],
+  "default_corpus": "paper_disjoint",
+  "notes": "Smallest model (fits a 24GB GPU). Certified on webpage tool hijack; the fit withheld the firm framing level (achf). Gated on the HF Hub."
+}
