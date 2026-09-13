@@ -9,7 +9,7 @@
 #   requirements.txt (this file)   what REPRODUCING EVERY NUMBER IN THE PAPER needs
 #
 # Every pin below is the version measured in the project venv that produced the reported
-# results (`.venv/bin/python -m importlib.metadata`), verified 2026-09-02. `torch==2.7.1`
+# results (`.venv/bin/python -m importlib.metadata`), verified 2026-09-02. `torch==2.14.0`
 # is the PyPI wheel that IS the cu126 build (the venv reports `2.7.1+cu126`, the local build
 # tag) — same convention as the cluster requirements file, which documents it at length.
 #
@@ -18,9 +18,9 @@
 # `src/corpora.MODEL_REVISIONS` and the caveat there.
 
 # ── core runtime (mirrors cluster/requirements.txt) ─────────────────────────
-torch==2.7.1
-transformers==5.14.1
-accelerate==1.14.0
+torch==2.14.0
+transformers==5.17.0
+accelerate==1.15.0
 datasets==5.0.1
 numpy==2.5.1
 scikit-learn==1.9.0
