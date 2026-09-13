@@ -44,10 +44,18 @@ _ELEMENTS = []   # for the atexit summary
 
 
 def _load(model_id, device):
-    key = (model_id, device)
+    # AUTODOJO_TARGET_ATTN: optional attn_implementation override (e.g. flex_attention
+    # for episodes beyond the gpt-oss eager-prefill memory wall). A non-empty value
+    # CHANGES THE SERVING PATH (src/model.py docstring; the 23ae.10 rule) -- cells run
+    # under it are LABELED and not directly comparable to eager-path cells. The label is
+    # this loader's own print plus the env echoed into the lane log.
+    attn = os.environ.get("AUTODOJO_TARGET_ATTN") or None
+    key = (model_id, device, attn)
     if key not in _MODELS:
-        print(f"[autodojo-target] loading {model_id} on {device}", flush=True)
-        _MODELS[key] = X.load_model_and_tok(model_id, device)
+        print(f"[autodojo-target] loading {model_id} on {device}"
+              + (f" attn_impl={attn} (LABELED PATH, non-eager)" if attn else ""),
+              flush=True)
+        _MODELS[key] = X.load_model_and_tok(model_id, device, attn_impl=attn)
     return _MODELS[key]
 
 
@@ -57,16 +65,20 @@ class _LoggedSteeredLLM(SteeredLLM):
     def query(self, *a, **kw):
         out = super().query(*a, **kw)
         if self.n_calls % 20 == 0:
+            agri = (f" agri_checked={self.agri.n_checked} agri_fired={self.agri.n_fired} "
+                    f"agri_prefilled={self.agri.n_prefilled}" if self.agri else "")
             print(f"[autodojo-target {self.name}] llm_calls={self.n_calls} "
                   f"steered_tokens={self.n_steered_tokens} "
-                  f"truncated={self.n_truncated}", flush=True)
+                  f"truncated={self.n_truncated}{agri}", flush=True)
         return out
 
 
 def _summary():
     for el in _ELEMENTS:
+        agri = (f" agri_checked={el.agri.n_checked} agri_fired={el.agri.n_fired} "
+                f"agri_prefilled={el.agri.n_prefilled}" if getattr(el, "agri", None) else "")
         print(f"[autodojo-target SUMMARY {el.name}] llm_calls={el.n_calls} "
-              f"steered_tokens={el.n_steered_tokens} truncated={el.n_truncated}",
+              f"steered_tokens={el.n_steered_tokens} truncated={el.n_truncated}{agri}",
               flush=True)
 
 
@@ -97,8 +109,23 @@ def make_llm(spec: str):
         probe_dir = os.path.join(_ROOT, probe_dir)
     if direction and not probe_dir:
         raise ValueError(f"a steered plugin target needs probe_dir: {spec}")
+    # AGRI arm (arXiv:2608.02657): agri_probe = spec JSON from
+    # tools/controls/build_agri_probe.py. Needs in-process hidden states (the gate reads
+    # a decoder-block output during an extra prefill pass), which is exactly why the
+    # AutoDojo target stays a plugin element rather than an HTTP-served model.
+    # SteeredLLM enforces mutual exclusivity with direction/kv_mask.
+    agri_spec = q.get("agri_probe") or None
+    agri = None
+    if agri_spec:
+        if not os.path.isabs(agri_spec):
+            agri_spec = os.path.join(_ROOT, agri_spec)
+        if not os.path.exists(agri_spec):
+            raise ValueError(f"agri_probe not found: {agri_spec}")
     layers = tuple(int(x) for x in q.get("layers", "12,16,20").split(","))
     model, tok = _load(model_id, device)
+    if agri_spec:
+        from agri_gate import AGRIGate
+        agri = AGRIGate(model, agri_spec)
     el = _LoggedSteeredLLM(
         model, tok,
         probe_dir=probe_dir,
@@ -108,13 +135,16 @@ def make_llm(spec: str):
         match_sigma_to=q.get("match_sigma_to", "dim_no_override"),
         max_new=int(q.get("max_new", "4096")),
         kv_mask=kv_mask,
+        agri=agri,
     )
     el.name = q.get("name") or (model_id.split("/")[-1]
                                 + ("-cacheprune" if kv_mask
+                                   else "-agri" if agri_spec
                                    else "-countersteer" if direction
                                    else "-undefended"))
     print(f"[autodojo-target] element ready: name={el.name} model={model_id} "
           f"direction={direction or 'NONE'} kv_mask={kv_mask or 'NONE'} "
+          f"agri_probe={agri_spec or 'NONE'} "
           f"layers={list(layers)} alpha={q.get('alpha', '8.0')} "
           f"max_new={q.get('max_new', '4096')}", flush=True)
     _ELEMENTS.append(el)

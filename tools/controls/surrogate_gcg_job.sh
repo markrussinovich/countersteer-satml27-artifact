@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Singularity job driver: SURROGATE-DEFENSE WHITE-BOX TRANSFER GCG (FINDINGS 10v addendum).
+# AML-cluster job driver: SURROGATE-DEFENSE WHITE-BOX TRANSFER GCG (FINDINGS 10v addendum).
 #
 # The attacker GCG-optimizes injection suffixes with THEIR OWN re-derived steering defense
 # in the gradient loop (SURR_KEY from runs/gpt-oss-20b-surrogate, run at the deployed

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Singularity driver: §19c GCG stage-1 LAUNCH 4 (benchmark-expansion agent, 2026-09-08).
+# AML-cluster driver: §19c GCG stage-1 LAUNCH 4 (benchmark-expansion agent, 2026-09-08).
 # Design per the §19c second amendment: plain objective config, each shard's model split
 # over TWO H100s (--device auto), 4 shards x 12 samples on one 8xH100 node. Single host
 # class, single config; all pre-launch-4 partials discarded (§19c). Fit check on the
@@ -28,7 +28,7 @@ HF_HUB_OFFLINE=0 "$PY" -c "from src.corpora import hf_dataset, NEMOTRON_REPO; hf
   || { echo "NEMOTRON_WARMUP_FAILED"; sync_blob; exit 1; }
 
 t0=$SECONDS
-bash singularity/seed_model.sh --require Qwen/Qwen3-30B-A3B-Thinking-2507 \
+bash cluster/seed_model.sh --require Qwen/Qwen3-30B-A3B-Thinking-2507 \
   || { echo "SEED_FAIL"; exit 1; }
 snap="$HF_HOME/hub/models--Qwen--Qwen3-30B-A3B-Thinking-2507/snapshots/144afc2f379b542fdd4e85a1fcd5e1f79112d95d"
 [ -d "$snap" ] || { echo "SEED_SHA_MISMATCH"; exit 1; }

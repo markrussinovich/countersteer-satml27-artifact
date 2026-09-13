@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Singularity driver: the STATE-OF-THE-ART DEFENSE COMPARISON on gpt-oss-20b — the full
+# AML-cluster driver: the STATE-OF-THE-ART DEFENSE COMPARISON on gpt-oss-20b — the full
 # 180-cell AgentDojo grid at max_new 4096 (the un-censored budget, FINDINGS 21c), one
 # FOUR-ARM battery per defense (clean / cleanplus / attacked / defended via
 # tools/controls/dojo_baseline_mn4096.sh). Four arms per battery is deliberate and is the
@@ -21,8 +21,8 @@
 #   9 stacked           CounterSteer + spotlighting in ONE arm (--stack-dojo): composition
 #  10 tool_filter       the 768 table's capability-guard-failure row, re-run at 4096
 #
-# SUBMIT (from a box with the AML_* env exported; see singularity/README.md):
-#   bash singularity/submit_job.sh --mode run --display-name xpia-dojo-soa-gptoss \
+# SUBMIT (from a box with the AML_* env exported; see cluster/README.md):
+#   bash cluster/submit_job.sh --mode run --display-name xpia-dojo-soa-gptoss \
 #     --timeout-seconds 72000 --no-clean --slmx-cmd 'bash tools/controls/dojo_soa_gptoss_job.sh'
 # Score with tools/controls/score_dojo_soa.py over the harvested shards.
 set -uo pipefail

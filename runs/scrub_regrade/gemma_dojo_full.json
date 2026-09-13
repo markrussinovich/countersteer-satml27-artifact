@@ -1,0 +1,87 @@
+{
+ "runs_glob": "runs/gemma4-31b-it/cert_harvest/gemma_dojo_full.shard[0-9].json",
+ "files": [
+  "runs/gemma4-31b-it/cert_harvest/gemma_dojo_full.shard0.json",
+  "runs/gemma4-31b-it/cert_harvest/gemma_dojo_full.shard1.json",
+  "runs/gemma4-31b-it/cert_harvest/gemma_dojo_full.shard2.json",
+  "runs/gemma4-31b-it/cert_harvest/gemma_dojo_full.shard3.json"
+ ],
+ "config_summary": {
+  "model": "google/gemma-4-31B-it",
+  "direction": "dim_no_override_both",
+  "alpha": 8.0,
+  "layers": "4,28,36",
+  "dojo_defense": null,
+  "stack_dojo": null,
+  "max_new": 4096,
+  "kv_mask": false,
+  "benchmark_version": "v1.2.1",
+  "scrub_args": true
+ },
+ "skipped_files": [],
+ "arms": {
+  "clean": {
+   "n": 180,
+   "raw_util": 1.0,
+   "scrub_util": 1.0,
+   "raw_sec": null,
+   "scrub_sec": null,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 0
+  },
+  "cleanplus": {
+   "n": 180,
+   "raw_util": 0.8888888888888888,
+   "scrub_util": 0.8888888888888888,
+   "raw_sec": null,
+   "scrub_sec": null,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 0
+  },
+  "attacked": {
+   "n": 180,
+   "raw_util": 0.85,
+   "scrub_util": 0.85,
+   "raw_sec": 0.2388888888888889,
+   "scrub_sec": 0.2388888888888889,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 180
+  },
+  "defended": {
+   "n": 180,
+   "raw_util": 0.7944444444444444,
+   "scrub_util": 0.7944444444444444,
+   "raw_sec": 0.005555555555555556,
+   "scrub_sec": 0.005555555555555556,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 180
+  }
+ },
+ "benign": {
+  "cleanplus": {
+   "n_pairs": 56,
+   "raw": {
+    "clean": 1.0,
+    "cleanplus": 0.9285714285714286,
+    "pct_of_clean": 92.85714285714286
+   },
+   "scrubbed": {
+    "clean": 1.0,
+    "cleanplus": 0.9285714285714286,
+    "pct_of_clean": 92.85714285714286
+   }
+  }
+ }
+}

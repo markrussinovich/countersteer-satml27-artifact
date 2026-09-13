@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Singularity job driver: AgentDojo's OWN inbuilt defenses (single-model, no detector)
+# AML-cluster job driver: AgentDojo's OWN inbuilt defenses (single-model, no detector)
 # measured on gpt-oss-20b over the same 180 cells as our steering runs.
 #
 #   GPUs 0-5  attacked arm only (--defended-only): defense ON + injection ON, AgentDojo's

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Singularity driver: SoA-defense comparison on Llama-3.1-8B-Instruct (FLAGSHIP, promoted
+# AML-cluster driver: SoA-defense comparison on Llama-3.1-8B-Instruct (FLAGSHIP, promoted
 # by owner 2026-09-10) — the full 180-cell AgentDojo grid at max_new 4096, FOUR-ARM
 # batteries (design rationale in dojo_soa_gptoss_job.sh; identical structure, third
 # flagship).
@@ -12,7 +12,7 @@
 # runs/cacheprune_mask_llama31-8b.json exists — a later submission or A100 battery).
 #
 # SUBMIT (weights must be staged first — seed_model.sh --require is fatal-on-missing):
-#   bash singularity/submit_job.sh --mode run --display-name xpia-dojo-soa-llama31 \
+#   bash cluster/submit_job.sh --mode run --display-name xpia-dojo-soa-llama31 \
 #     --timeout-seconds 43200 --no-clean --slmx-cmd 'bash tools/controls/dojo_soa_llama31_job.sh'
 # (8B model: the 4-arm 180-cell battery measured 14-47 min per 2-GPU box on A100s;
 #  6 batteries on 8 H100 shards each should clear well inside 12 h.)
@@ -24,9 +24,9 @@ set -uo pipefail
 # submission, 2026-09-10 — all 56 shards died identically in AutoTokenizer). PromptGuard
 # and PIGuard resolve from the flat XPIA_MODEL_STORE mount (_pi_model_path) and are
 # unaffected by HF_HUB_OFFLINE.
-bash singularity/seed_model.sh --require meta-llama/Llama-3.1-8B-Instruct \
+bash cluster/seed_model.sh --require meta-llama/Llama-3.1-8B-Instruct \
   || { echo "DOJO-SOA-LLAMA31-DONE rc=3 (seed llama failed)"; exit 3; }
-bash singularity/seed_model.sh --require protectai/deberta-v3-base-prompt-injection-v2 \
+bash cluster/seed_model.sh --require protectai/deberta-v3-base-prompt-injection-v2 \
   || { echo "DOJO-SOA-LLAMA31-DONE rc=3 (seed deberta failed)"; exit 3; }
 export HF_HUB_OFFLINE=1
 

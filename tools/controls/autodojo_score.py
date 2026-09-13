@@ -186,10 +186,9 @@ def main():
         if k in best_rows:
             n_dups += 1
             old = best_rows[k]
-            if r["n_traj"] == old["n_traj"] and r["adaptive"] != old["adaptive"]:
-                print(f"WARNING: conflicting duplicate cell {k}: adaptive "
-                      f"{old['adaptive']} vs {r['adaptive']} at equal trajectory "
-                      f"length -- keeping the first, INVESTIGATE")
+            if r["n_traj"] == old["n_traj"] and r != old:
+                print(f"WARNING: conflicting duplicate cell {k} at equal trajectory "
+                      f"length ({old} vs {r}) -- keeping the first, INVESTIGATE")
                 continue
             if r["n_traj"] > old["n_traj"]:
                 best_rows[k] = r
@@ -230,10 +229,10 @@ def main():
             print(f"{arm}: {len(have)}/{len(plan)} planned targets present"
                   + (f"; MISSING: {missing}" if missing else ""))
 
-    print("\n=== macro-averages over targets (unweighted; includes static-cracked "
-          "cells -- see per-row `it`/`nOpt`) ===")
-    print(f"{'arm':<26} {'scope':<16} {'n':>3} {'bare':>6} {'II':>6} {'seed*':>6} "
-          f"{'ADAPT':>6} {'nOpt=0':>6}")
+        print("\n=== macro-averages over targets (unweighted; includes static-cracked "
+            "cells -- see per-row `it`/`nOpt`) ===")
+        print(f"{'arm':<26} {'scope':<16} {'n':>3} {'bare':>6} {'II':>6} {'seed*':>6} "
+            f"{'ADAPT':>6} {'VOID':>4} {'valid':>6} {'worst':>6}")
     arms = sorted({r["arm"] for r in rows})
     for arm in arms:
         sub = [r for r in rows if r["arm"] == arm]
@@ -248,7 +247,11 @@ def main():
             if not rs:
                 continue
             m = lambda k: sum(r[k] for r in rs) / len(rs)
-            nz = sum(1 for r in rs if r["n_optimized"] == 0 and r["seedBest"] < 1.0)
+            void = [r for r in rs if r["n_optimized"] == 0 and r["seedBest"] < 1.0]
+            valid = [r for r in rs if r not in void]
+            valid_m = (sum(r["adaptive"] for r in valid) / len(valid)
+                       if valid else float("nan"))
+            worst_m = (sum(r["adaptive"] for r in rs) + len(void)) / len(rs)
             cap_m = (f" AD@{a.iter_cap}={m('adaptive_cap'):.3f}"
                      if a.iter_cap is not None else "")
             frd_m = ""
@@ -262,7 +265,7 @@ def main():
                 frd_m = f" ADAPTinj={inj:.3f} fraudCells={nfr}"
             print(f"{arm:<26} {name:<16} {len(rs):>3} {m('staticBare'):>6.3f} "
                   f"{m('staticII'):>6.3f} {m('seedBest'):>6.3f} {m('adaptive'):>6.3f} "
-                  f"{nz:>6}{cap_m}{frd_m}")
+                f"{len(void):>4} {valid_m:>6.3f} {worst_m:>6.3f}{cap_m}{frd_m}")
 
     health = llm_health(a.root)
     if health:

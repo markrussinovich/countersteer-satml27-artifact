@@ -1,0 +1,61 @@
+{
+ "runs_glob": "runs/dojo_baselines_qwen/qwen_dojo_tool_filter_benign.shard[0-9].json",
+ "files": [
+  "runs/dojo_baselines_qwen/qwen_dojo_tool_filter_benign.shard0.json",
+  "runs/dojo_baselines_qwen/qwen_dojo_tool_filter_benign.shard1.json"
+ ],
+ "config_summary": {
+  "model": "Qwen/Qwen3-30B-A3B-Thinking-2507",
+  "direction": "dim_no_override_both",
+  "alpha": 8.0,
+  "layers": "12,16,20",
+  "dojo_defense": "tool_filter",
+  "stack_dojo": null,
+  "max_new": 4096,
+  "kv_mask": false,
+  "benchmark_version": "v1.2.1",
+  "scrub_args": true
+ },
+ "skipped_files": [],
+ "arms": {
+  "clean": {
+   "n": 56,
+   "raw_util": 0.9107142857142857,
+   "scrub_util": 0.9107142857142857,
+   "raw_sec": null,
+   "scrub_sec": null,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 0
+  },
+  "cleanplus": {
+   "n": 56,
+   "raw_util": 0.05357142857142857,
+   "scrub_util": 0.05357142857142857,
+   "raw_sec": null,
+   "scrub_sec": null,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 0
+  }
+ },
+ "benign": {
+  "cleanplus": {
+   "n_pairs": 56,
+   "raw": {
+    "clean": 0.9107142857142857,
+    "cleanplus": 0.05357142857142857,
+    "pct_of_clean": 5.88235294117647
+   },
+   "scrubbed": {
+    "clean": 0.9107142857142857,
+    "cleanplus": 0.05357142857142857,
+    "pct_of_clean": 5.88235294117647
+   }
+  }
+ }
+}

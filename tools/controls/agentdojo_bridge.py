@@ -853,8 +853,20 @@ class SteeredLLM(BasePipelineElement):
     def __init__(self, model, tok, probe_dir=None, direction=None, layers=(12, 16, 20),
                  alpha=8.0, scale="sigma", match_sigma_to="dim_no_override",
                  max_new=512, no_think=False, kv_mask=None, schedule="fixed",
-                 span_select="full"):
+                 span_select="full", agri=None, steer_mode="add"):
         self.model, self.tok = model, tok
+        # AGRI baseline (arXiv:2608.02657): `agri` is an agri_gate.AGRIGate. Per assistant
+        # turn the gate scores the rendered prompt's post-assistant hidden state during an
+        # extra prefill pass; above threshold, the anti-injection reasoning prefill is
+        # appended to the generation prompt for this and the next N turns. Mutually
+        # exclusive with steering and kv_mask -- two defenses in one arm is not an arm.
+        self.agri = agri
+        if agri and (direction or kv_mask):
+            raise SystemExit("agri and direction/kv_mask are mutually exclusive")
+        if agri and (schedule != "fixed" or span_select != "full"):
+            raise SystemExit("agri arms are unsteered; a non-default steer schedule or "
+                             "span selector would be a label on an edit that never runs "
+                             "(the FINDINGS §23e no-op-label class)")
         # WHICH tokens inside each tool span are steered (§26.12 content-leaf program):
         # "full" (default) = every span token, the deployed behavior, byte-identical path
         # (no selector code executes); "leaf" = content-leaf selection (fail-closed to
@@ -902,7 +914,24 @@ class SteeredLLM(BasePipelineElement):
                 raise SystemExit("kv_mask and direction are mutually exclusive")
             self.kv_spec = X.load_kv_mask(kv_mask, model.config)
         self.fmt = fmt_of(tok)
+        if agri:
+            from agri_gate import SUPPORTED_PREFILL_FMTS
+            if self.fmt not in SUPPORTED_PREFILL_FMTS:
+                raise SystemExit(
+                    f"AGRI prefill has no {self.fmt!r} branch (have "
+                    f"{list(SUPPORTED_PREFILL_FMTS)}) -- refused at arm build so an "
+                    f"unsupported format cannot burn a partial run before the first fire")
         self.layers, self.alpha, self.scale = list(layers), alpha, scale
+        # Steering operator (2026-09-12, operator program §26.37): "add" is the deployed
+        # subtraction; the ablate* modes are the dose-free projection family from
+        # src/steering.py. A non-add mode with no direction is the §23e no-op-label class.
+        if steer_mode != "add":
+            if not direction:
+                raise SystemExit("steer_mode without a direction is a label on an edit "
+                                 "that never runs (FINDINGS §23e class)")
+            if steer_mode not in X.MODES:
+                raise SystemExit(f"unknown steer_mode {steer_mode!r}; one of {sorted(X.MODES)}")
+        self.steer_mode = steer_mode
         self.max_new, self.no_think = max_new, no_think
         # glm45 included: GLM-4.5 is a thinking model too (self-opened <think>), so the
         # small-max_new hazard below applies to it exactly as to the ChatML Thinking family
@@ -1036,6 +1065,28 @@ class SteeredLLM(BasePipelineElement):
             self._sched_n0 = None
         self._sched_last_ntool = n_toolmsgs
 
+        # ── AGRI gate (arXiv:2608.02657): score the prompt, maybe append the reasoning
+        # prefill. `base_text` keeps the PRE-prefill render: in_think below must reflect
+        # whether the ORIGINAL prompt opened a <think> region (the prefill continues it),
+        # and the stored completion is `agri_wrap + generated` so the reasoning-strip
+        # regexes in _executable_calls/_final_text/reasoning_free see a well-formed
+        # reasoning region instead of an unmarked analysis continuation.
+        base_text, agri_wrap, agri_prefilled = text, "", False
+        if self.agri is not None:
+            from agri_gate import prefill_suffix
+            ids_t0 = torch.tensor([ids], device=self.model.device)
+            agri_prefilled = self.agri.step(ids_t0, n_toolmsgs)
+            if agri_prefilled:
+                sfx, agri_wrap = prefill_suffix(self.fmt, base_text, self.agri.prefill)
+                text = text + sfx
+                enc = self.tok(text, return_offsets_mapping=True,
+                               add_special_tokens=False)
+                ids = enc["input_ids"]
+                # om/idx above were computed on the PRE-suffix render. Nothing below uses
+                # them on AGRI arms (steer/kv_spec are structurally None), but a future
+                # edit must not inherit a stale offset map -- refresh it (review NOTE).
+                om = enc["offset_mapping"]
+
         steer, sched_scale = None, None
         if self.dirs is not None and idx_s:
             # schedule="fixed" returns self.alpha UNCHANGED (same object, no arithmetic),
@@ -1046,7 +1097,8 @@ class SteeredLLM(BasePipelineElement):
             if sel_scale is not None:
                 alpha_eff = alpha_eff * sel_scale   # "energy" arm's matched-dose reduction
             steer = X.Steer(self.model, self.layers, self.dirs, alpha_eff, self.scale,
-                            self.sigmas, self.ablate, "add", None, 1.0, True, None, 0.0)
+                            self.sigmas, self.ablate, self.steer_mode, None, 1.0, True,
+                            None, 0.0)
         ids_t = torch.tensor([ids], device=self.model.device)
         self.n_calls += 1
         self.n_steered_tokens += len(idx_s) if (steer or self.kv_spec) else 0
@@ -1069,6 +1121,11 @@ class SteeredLLM(BasePipelineElement):
                 steer.__exit__()
         generated_ids = g[0][ids_t.shape[1]:]
         completion = self.tok.decode(generated_ids, skip_special_tokens=False)
+        if agri_wrap:
+            # re-attach the injected reasoning prefill so every downstream parser
+            # (reasoning strip, call extraction, offline rescoring) sees a well-formed
+            # reasoning region; the prefill is reasoning and is stripped from scoring text
+            completion = agri_wrap + completion
         # Did the PROMPT open a <think> block (Thinking templates end the generation header
         # inside one)? That decides whether `</think>` is required before anything counts as
         # emitted -- checked per prompt, not per model name, so a non-thinking chatml model
@@ -1079,7 +1136,10 @@ class SteeredLLM(BasePipelineElement):
         # thought channel in the generation prompt (`<|channel>thought\n<channel|>`), so
         # the prompt never ends inside a reasoning region -- in_think is False by
         # construction and the self-opened-region strip lives in reasoning_free.
-        in_think = self.fmt in ("chatml", "glm45") and text.rstrip().endswith("<think>")
+        # base_text, not text: an appended AGRI reasoning prefill must not flip the
+        # opened-<think> determination for the completion that continues it
+        in_think = (self.fmt in ("chatml", "glm45")
+                    and base_text.rstrip().endswith("<think>"))
         self.n_truncated += int(generation_truncated(
             generated_ids, self.model.generation_config.eos_token_id))
         if self.transcript is not None:
@@ -1094,6 +1154,11 @@ class SteeredLLM(BasePipelineElement):
                    "schedule": self.schedule,
                    "sched_scale": sched_scale if steer else None,
                    "spans": spans, "steered_char_ranges": spans if steer else []}
+            if self.agri is not None:
+                # AGRI engagement evidence per turn: the probe score and whether this
+                # turn carried the prefill (fire or active-window carryover)
+                rec["agri_score"] = self.agri.last_score
+                rec["agri_prefilled"] = agri_prefilled
             if self.span_select != "full":
                 # §25h steered-tokens standard for the selector arms: per-forward evidence
                 # of what was selected, what fell back, and the leaf/full token counts.

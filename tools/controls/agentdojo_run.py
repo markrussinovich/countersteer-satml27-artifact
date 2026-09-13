@@ -79,6 +79,13 @@ def main():
                          "the tool spans instead of steering; --direction is "
                          "ignored for those arms. Mutually exclusive with "
                          "--dojo-defense.")
+    ap.add_argument("--agri-probe", dest="agri_probe", default=None,
+                    help="AGRI baseline (arXiv:2608.02657): path to the probe spec JSON "
+                         "from tools/controls/build_agri_probe.py. The defended/cleanplus "
+                         "arms run the probe-gated anti-injection reasoning prefill "
+                         "around the UNSTEERED model; --direction is ignored for those "
+                         "arms. Mutually exclusive with --kv-mask/--dojo-defense/"
+                         "--stack-dojo.")
     ap.add_argument("--dojo-defense", default=None, choices=S.DOJO_DEFENSES,
                     help="the defended/cleanplus arms become AgentDojo's OWN inbuilt defense "
                          "(their from_config wiring, single-model, no detector) around the "
@@ -100,6 +107,10 @@ def main():
                          "with --benign-only/--defended-only. NOTE: the default=None is "
                          "never passed through `type` (argparse only applies type to "
                          "STRING defaults — the set() landmine in CLAUDE.md).")
+    ap.add_argument("--steer-mode", default="add",
+                    help="steering operator for the steered arms (src/steering.py MODES; "
+                         "'add' = deployed subtraction; ablate* = dose-free projection, "
+                         "run with --alpha 0). Unsteered arms always run 'add'/no-op.")
     ap.add_argument("--steer-schedule", default="fixed",
                     help="dose schedule over turns for the STEERED arms (§26.5 item 2, "
                          "owner program 2026-09-08); one of "
@@ -162,10 +173,21 @@ def main():
     ap.add_argument("--out", default=f"{ROOT}/runs/agentdojo_run.json")
     a = ap.parse_args()
 
-    if a.alphas and (a.benign_only or a.defended_only or a.dojo_defense or a.kv_mask):
+    if a.alphas and (a.benign_only or a.defended_only or a.dojo_defense or a.kv_mask
+                     or a.agri_probe):
         ap.error("--alphas is mutually exclusive with --benign-only/--defended-only/"
-                 "--dojo-defense/--kv-mask (review 2026-09-08 D3: the combinations "
-                 "silently drop or mislabel arms)")
+                 "--dojo-defense/--kv-mask/--agri-probe (review 2026-09-08 D3: the "
+                 "combinations silently drop or mislabel arms)")
+    if a.agri_probe and (a.dojo_defense or a.kv_mask or a.stack_dojo):
+        ap.error("--agri-probe is mutually exclusive with --dojo-defense/--kv-mask/"
+                 "--stack-dojo -- one defense per arm")
+    if a.agri_probe and not a.direction:
+        # review 2026-09-11: build_pipeline reads `direction` as the defense-ON flag, so
+        # an empty --direction would silently run the defended/cleanplus arms UNDEFENDED
+        # while labelling them AGRI (the §23e no-op-wearing-a-label class). The direction
+        # itself is ignored on AGRI arms; it must merely be non-empty.
+        ap.error("--agri-probe requires a non-empty --direction (used only as the "
+                 "defense-ON flag; ignored on AGRI arms)")
     # --steer-schedule: a single value threads straight through; a comma list is the
     # §26.5 item 2 CONTROLLED schedule battery (per-schedule steered arms sharing their
     # cell's clean/attacked comparators in one process, the --alphas pairing pattern).
@@ -179,15 +201,16 @@ def main():
     if not sched_battery:
         a.steer_schedule = scheds[0]   # normalized string; build_pipeline reads this
     if sched_battery and (a.alphas or a.benign_only or a.defended_only
-                          or a.dojo_defense or a.kv_mask):
+                          or a.dojo_defense or a.kv_mask or a.agri_probe):
         ap.error("a multi-schedule --steer-schedule (the §26.5 item 2 controlled battery) "
                  "is mutually exclusive with --alphas/--benign-only/--defended-only/"
                  "--dojo-defense/--kv-mask -- one comparison per process, and the "
                  "steered-arm wiring would silently mislabel arms otherwise")
-    if any(s_ != "fixed" for s_ in scheds) and (a.dojo_defense or a.kv_mask):
+    if any(s_ != "fixed" for s_ in scheds) and (a.dojo_defense or a.kv_mask
+                                                or a.agri_probe):
         ap.error("--steer-schedule applies to STEERED arms only; with --dojo-defense/"
-                 "--kv-mask the defended arm is unsteered, so a non-fixed schedule would "
-                 "silently not run (the §23e no-op-wearing-a-label class)")
+                 "--kv-mask/--agri-probe the defended arm is unsteered, so a non-fixed "
+                 "schedule would silently not run (the §23e no-op-wearing-a-label class)")
     if any(s_ != "fixed" for s_ in scheds) and not a.direction:
         # review8 D3: build_pipeline forces schedule="fixed" when direction is falsy,
         # BYPASSING the bridge's no-op-label guard -- arms labelled @energy-norm would run
@@ -208,7 +231,7 @@ def main():
     if not sel_battery:
         a.span_select = sels[0]   # normalized string; build_pipeline reads this
     if sel_battery and (a.alphas or sched_battery or a.defended_only
-                        or a.dojo_defense or a.kv_mask):
+                        or a.dojo_defense or a.kv_mask or a.agri_probe):
         ap.error("a multi --span-select (the §26.12 selector battery) is mutually "
                  "exclusive with --alphas / a multi-schedule battery / --defended-only / "
                  "--dojo-defense / --kv-mask -- one comparison per process")
@@ -217,10 +240,11 @@ def main():
                  "(attacked + defended@SEL); use --defended-only elsewhere")
     if a.security_only and a.benign_only:
         ap.error("--security-only and --benign-only are mutually exclusive")
-    if any(s_ != "full" for s_ in sels) and (a.dojo_defense or a.kv_mask):
+    if any(s_ != "full" for s_ in sels) and (a.dojo_defense or a.kv_mask
+                                             or a.agri_probe):
         ap.error("--span-select applies to STEERED arms only; with --dojo-defense/"
-                 "--kv-mask the defended arm is unsteered, so a non-full selector would "
-                 "silently not run (the §23e no-op-wearing-a-label class)")
+                 "--kv-mask/--agri-probe the defended arm is unsteered, so a non-full "
+                 "selector would silently not run (the §23e no-op-wearing-a-label class)")
     if any(s_ != "full" for s_ in sels) and not a.direction:
         ap.error("a non-full --span-select requires a non-empty --direction")
     if any(s_ != "full" for s_ in sels) and any(s2 != "fixed" for s2 in scheds):
@@ -452,6 +476,14 @@ def main():
                     # spotlighting): transcripts drop prompts, so this is the only
                     # artifact evidence the formatter ran
                     row[arm]["fmt_calls"] = pipe.fmt_counter.n
+                if getattr(llm, "agri", None):
+                    # engagement proof for the AGRI baseline: probe evaluations, threshold
+                    # crossings, and turns that carried the reasoning prefill. An arm with
+                    # zero checks -- or an attacked-side arm with zero fires -- is the
+                    # §23e no-op-wearing-a-label failure and must be treated as such.
+                    row[arm]["agri_checked"] = llm.agri.n_checked
+                    row[arm]["agri_fired"] = llm.agri.n_fired
+                    row[arm]["agri_prefilled"] = llm.agri.n_prefilled
                 if arm == "clean":
                     clean_tool_out = S.tool_outputs_from(llm.transcript)
                     clean_cache[ckey] = (row[arm], transcripts[arm], clean_tool_out)
@@ -535,6 +567,10 @@ def main():
                                               # the per-turn alpha multiplier it applied
                                               "schedule": t.get("schedule", "fixed"),
                                               "sched_scale": t.get("sched_scale"),
+                                              # AGRI arms: per-turn probe score and
+                                              # whether the reasoning prefill was applied
+                                              "agri_score": t.get("agri_score"),
+                                              "agri_prefilled": t.get("agri_prefilled"),
                                               # §26.12: which span selector ran and its
                                               # per-forward coverage/fallback evidence
                                               "span_select": t.get("span_select", "full"),

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Singularity driver: SoA-defense comparison WAVE 2 on Qwen3-30B-A3B-Thinking-2507 — the
+# AML-cluster driver: SoA-defense comparison WAVE 2 on Qwen3-30B-A3B-Thinking-2507 — the
 # full 180-cell AgentDojo grid at max_new 4096, FOUR-ARM batteries (see
 # dojo_soa_gptoss_job.sh for the design rationale; identical structure, second anchor model).
 #
@@ -18,7 +18,7 @@
 # review measured the Qwen four-arm battery at ~3.5-4.5 h (170-190 s/episode precedent +
 # shard skew + steering think-length), so six batteries need >=100000 s — do NOT submit
 # with the 22 h default:
-#   bash singularity/submit_job.sh --mode run --display-name xpia-dojo-soa-qwen \
+#   bash cluster/submit_job.sh --mode run --display-name xpia-dojo-soa-qwen \
 #     --timeout-seconds 115200 --no-clean --slmx-cmd 'bash tools/controls/dojo_soa_qwen_job.sh'
 set -uo pipefail
 

@@ -1,0 +1,35 @@
+{
+ "runs_glob": "runs/dojo_baselines_qwen/qwen_dojo_spotlighting_with_delimiting_atk.shard[0-9].json",
+ "files": [
+  "runs/dojo_baselines_qwen/qwen_dojo_spotlighting_with_delimiting_atk.shard0.json",
+  "runs/dojo_baselines_qwen/qwen_dojo_spotlighting_with_delimiting_atk.shard1.json"
+ ],
+ "config_summary": {
+  "model": "Qwen/Qwen3-30B-A3B-Thinking-2507",
+  "direction": "dim_no_override_both",
+  "alpha": 8.0,
+  "layers": "12,16,20",
+  "dojo_defense": "spotlighting_with_delimiting",
+  "stack_dojo": null,
+  "max_new": 4096,
+  "kv_mask": false,
+  "benchmark_version": "v1.2.1",
+  "scrub_args": true
+ },
+ "skipped_files": [],
+ "arms": {
+  "defended": {
+   "n": 180,
+   "raw_util": 0.6833333333333333,
+   "scrub_util": 0.6833333333333333,
+   "raw_sec": 0.4166666666666667,
+   "scrub_sec": 0.4166666666666667,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 180
+  }
+ },
+ "benign": null
+}

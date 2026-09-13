@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Singularity driver: DETECTOR filters on AgentDyn-180 (owner-approved program,
+# AML-cluster driver: DETECTOR filters on AgentDyn-180 (owner-approved program,
 # 2026-09-10) — the open-ended-benchmark gap in the detector picture: PIGuard +
 # PromptGuard-2 have never been measured outside static AgentDojo. Four 4-arm batteries
 # (2 models x 2 detectors), the SAME 180-stratified cells and mn4096/system-yaml
@@ -7,9 +7,14 @@
 # the existing tables with same-process anchors.
 #
 # SUBMIT (after xpia-dojo-filters-glm frees the node):
-#   bash singularity/submit_job.sh --mode run --display-name xpia-agentdyn-detectors \
+#   bash cluster/submit_job.sh --mode run --display-name xpia-agentdyn-detectors \
 #     --timeout-seconds 79200 --no-clean --slmx-cmd 'bash tools/controls/agentdyn_detectors_job.sh'
 set -uo pipefail
+
+# AgentDyn = the vendored agentdojo fork, selected by PYTHONPATH (never installed).
+# MISSING in the first submission — every shard died on KeyError 'dailylife'
+# (stock agentdojo lacks the AgentDyn suites), 2026-09-10.
+export PYTHONPATH="$PWD/reference/agentdyn/src${PYTHONPATH:+:$PYTHONPATH}"
 
 LOCAL=runs/agentdyn_rivals
 LOGD=logs_agentdyn_detectors
@@ -35,13 +40,13 @@ run_batt() { # model cells label defense
   return "$r"
 }
 
-bash singularity/seed_model.sh --require openai/gpt-oss-20b || { echo "AGENTDYN-DETECTORS-DONE rc=3"; exit 3; }
+bash cluster/seed_model.sh --require openai/gpt-oss-20b || { echo "AGENTDYN-DETECTORS-DONE rc=3"; exit 3; }
 run_batt openai/gpt-oss-20b runs/agentdyn_cells180.gptoss.json \
          agentdyn180_gptoss_piguard     pi_detector_piguard     || rc=1
 run_batt openai/gpt-oss-20b runs/agentdyn_cells180.gptoss.json \
          agentdyn180_gptoss_promptguard pi_detector_promptguard || rc=1
 
-bash singularity/seed_model.sh --require Qwen/Qwen3-30B-A3B-Thinking-2507 || { echo "AGENTDYN-DETECTORS-DONE rc=3"; exit 3; }
+bash cluster/seed_model.sh --require Qwen/Qwen3-30B-A3B-Thinking-2507 || { echo "AGENTDYN-DETECTORS-DONE rc=3"; exit 3; }
 run_batt Qwen/Qwen3-30B-A3B-Thinking-2507 runs/agentdyn_cells180.qwen.json \
          agentdyn180_qwen_piguard       pi_detector_piguard     || rc=1
 run_batt Qwen/Qwen3-30B-A3B-Thinking-2507 runs/agentdyn_cells180.qwen.json \
@@ -52,7 +57,7 @@ run_batt Qwen/Qwen3-30B-A3B-Thinking-2507 runs/agentdyn_cells180.qwen.json \
 # attacked arm = SecAlign alone, defended arm = SecAlign+CounterSteer hybrid (the same
 # steering config as the §22b AgentDojo battery: combo_ovr8_pat1 @8.06 sigma-matched).
 # The 39G merged checkpoint is a flat dir in the store; blobfuse mmap-loading is
-# pathological (singularity/README.md), so copy node-local first (sequential read, fine).
+# pathological (cluster/README.md), so copy node-local first (sequential read, fine).
 if [[ -d "${XPIA_MODEL_STORE:-/nonexistent}/secalign-dpo-gptoss/merged" ]]; then
   SA_SRC="$XPIA_MODEL_STORE/secalign-dpo-gptoss/merged"
 elif [[ -d "${XPIA_MODEL_STORE:-/nonexistent}/secalign-dpo-gptoss" ]]; then

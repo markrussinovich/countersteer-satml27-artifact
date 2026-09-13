@@ -42,7 +42,7 @@ PY="${PY:-$ROOT/.venv/bin/python}"
 
 DEFENSE=""; KVMASK=""; LABEL=""; GPUS=""; NSHARD=""; SHARD_BASE=0
 DIRECTION=""; ALPHA=""; LAYERS=""; MATCH_SIGMA="__unset__"; STACK=""; PROBEDIR=""
-MAXNEW=4096; MODEL="openai/gpt-oss-20b"; SYSTEM=""; DEVICE=""; ALPHAS=""
+MAXNEW=4096; MODEL="openai/gpt-oss-20b"; SYSTEM=""; DEVICE=""; ALPHAS=""; STEERMODE=""
 CELLS="$ROOT/runs/agentdojo_cells.json"
 OUTDIR="$ROOT/runs/dojo_baselines_mn4096"
 LOGDIR="$ROOT/logs"
@@ -63,6 +63,7 @@ while [[ $# -gt 0 ]]; do
     --shard-base) SHARD_BASE="$2"; shift 2 ;;
     --max-new)    MAXNEW="$2";  shift 2 ;;
     --system)     SYSTEM="$2";  shift 2 ;;   # 'yaml' for AgentDyn (benchmark's own message)
+    --steer-mode) STEERMODE="$2"; shift 2 ;;  # src/steering.py MODES; ablate* = dose-free projection (§26.37)
     --alphas)     ALPHAS="$2";  shift 2 ;;   # dose-frontier sweep (agentdojo_run --alphas)
     --device)     DEVICE="$2";  shift 2 ;;   # e.g. 'auto' for multi-GPU-per-shard models;
                                              # then --gpus items may be dash-joined groups
@@ -125,6 +126,7 @@ for i in "${!GPUARR[@]}"; do
   [[ -n "$LAYERS"  ]] && args+=(--layers "$LAYERS")
   [[ -n "$PROBEDIR" ]] && args+=(--probe-dir "$PROBEDIR")
   [[ "$MATCH_SIGMA" != "__unset__" ]] && args+=(--match-sigma-to "$MATCH_SIGMA")
+  [[ -n "$STEERMODE" ]] && args+=(--steer-mode "$STEERMODE")
   [[ -n "$STACK"   ]] && args+=(--stack-dojo "$STACK")
   CUDA_VISIBLE_DEVICES="$gpu" "$PY" -u "$ROOT/tools/controls/agentdojo_run.py" "${args[@]}" \
     > "$log" 2>&1 &

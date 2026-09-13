@@ -30,7 +30,9 @@ the canonical scorers, and fitted directions for the evaluated models.
 | `tools/bringup_stage1.sh` | one-command per-model bring-up: capture → factorial → fit → gates |
 | `configs/` | one JSON per model: the certified deployed cell (direction, dose, layers, sigma convention, budgets, firing corpora) for all five evaluated models |
 | `evaluate.sh` | one-command evaluation runner: `./evaluate.sh configs/<model>.json` (single-turn corpora + canonical scoring; `--agentic` for the AgentDojo battery) |
-| `runs/` | fitted probe/direction pickles for **all five models**, all evaluation corpora (webpage dev + held-out test, JSON parameter-abuse with held-out attacker-template sets, LLMail replay set), CachePrune masks, the AgentDojo cell list |
+| `runs/` | fitted probe/direction pickles for **all five models**, all evaluation corpora (webpage dev + held-out test, JSON parameter-abuse with held-out attacker-template sets, LLMail replay set), CachePrune masks, the AgentDojo cell list, and the per-sample eval artifacts behind the reported tables (`achT_endtoend/`, `scrub_regrade/`, `general_utility_*.json`, `agri_probe_*.json`, `adaptive_sample_level_tests.json`) |
+| `prereg/` | preregistrations written before their test touches: the framing-held-out refit's end-to-end certification (`ach_endtoend_prereg.json`) and the AutoDojo adaptive evaluation (`autodojo_prereg.json`) |
+| `reference/` | vendored third-party code: `reference/agri/` (the AGRI probe pipeline, arXiv:2608.02657, with our marked patches; `reference/DEVIATIONS.md` is the paper-vs-port deviations table). Other `reference/` checkouts (AgentDojo/AgentDyn/AutoDojo forks) are fetched separately at the commits pinned in the module docstrings |
 
 ## Install
 
@@ -110,6 +112,45 @@ AgentDyn fork and the AutoDojo adaptive-attack optimizer are driven through
 the same bridge; see the module docstrings for the vendored-fork pinning
 (`reference/` checkouts are fetched separately; pinned commits are named in
 the docstrings).
+
+## Results (paper Table I: AgentDojo, defenses × models)
+
+Compromise rate (AgentDojo's own security checker over the 180-case grid) and benign
+utility (% of the same model's clean arm, typography-normalized):
+
+| arm | gpt-oss-20b | Qwen3-30B | Gemma-4-31B | GLM-4.5-Air | Llama-3.1-8B |
+|---|---|---|---|---|---|
+| no defense (cmp / util) | .483 / 100 | .489 / 100 | .239 / 100 | .183 / 100 | .100 / 100 |
+| **CounterSteer** (cmp / util) | .091 / 90.6 | .072 / 94.1 | .006 / 92.9 | .056 / 102.2 | .050 / 100.0 |
+
+These are the comparison batteries; the same-configuration certification runs (quoted in
+the paper's abstract) read 0.006–0.079 compromise at 91–100% utility, with gpt-oss-20b at
+.475 → .079 (94.4%). Under the adaptive attacker (AutoDojo AD@6: success at six
+optimization iterations) the undefended/defended rates are .673/.175 (gpt-oss-20b),
+.730/.188 (Qwen3-30B), .377/.307 (Llama-3.1-8B). Rival-defense rows and per-model
+batteries are in the paper; the artifacts behind them ship under `runs/`.
+
+## Analysis and audit tooling (beyond the batteries)
+
+- `tools/controls/dojo_scrub_regrade.py` — typography-normalized offline regrade of a
+  stored AgentDojo battery (Unicode space/dash → ASCII, uniformly across arms) through
+  AgentDojo's own unmodified checkers, with a per-episode raw-replay fidelity gate;
+  zero GPU, needs the `.transcripts.json` siblings. Artifacts: `runs/scrub_regrade/`.
+- `tools/controls/general_utility_bench.py` — capability-benchmark harness
+  (GSM8K/MMLU/IFEval), four arms in one process (plain/tool × baseline/steered),
+  greedy; persists full completions per arm with a stable sha256. Artifacts:
+  `runs/general_utility_*.json`. Companion `tools/controls/gub_failure_probe.py`
+  regenerates flip-enriched failure samples for anatomy (batch=1: item-level flips are
+  batch-composition-sensitive).
+- `tools/controls/adaptive_sample_level_test.py` — sample-level paired inference for
+  the adaptive query search (attempts nest within samples, so attempt-level tests are
+  anti-conservative): exact sign-flip permutation test on paired per-sample means plus
+  a paired bootstrap CI. Artifact: `runs/adaptive_sample_level_tests.json`.
+- `tools/controls/agri_gate.py` — the AGRI rival arm (arXiv:2608.02657): probe-gated
+  anti-injection reasoning prefill, implemented from their released probe pipeline
+  (`reference/agri/`) plus the paper's intervention spec; loads the spec JSONs under
+  `runs/agri_probe_*.json`. `tools/controls/build_agri_probe.py` converts an AGRI
+  probe checkpoint into that deployable spec. Port deviations: `reference/DEVIATIONS.md`.
 
 ## Notes
 

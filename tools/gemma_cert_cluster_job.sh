@@ -1,7 +1,7 @@
 #!/bin/bash
 # Gemma-4-31B CERTIFICATION job -- one 8x H100 node, everything GPU-heavy in the Gemma
 # certification program (owner addendum 2026-09-04: put the one-shot test pass and the
-# AgentDojo full grid on Singularity):
+# AgentDojo full grid on AML-cluster):
 #
 #   GPU 0  ONE-SHOT held-out test pass, paper_param_heldout    (confirm, 4 arms, n=52, a8)
 #          then the PRESPECIFIED a6 dose-monotonicity control (separate confirm invocation;
@@ -36,7 +36,7 @@
 # `ours_*` columns sit beside Qwen's, say the adjudication settings differ.
 #
 # SUBMIT (from the /datadrive/xpia-gemmacert clone on <FLEET_HOST_B>, where az login lives):
-#   bash singularity/submit_job.sh --mode run --display-name xpia-gemma-cert \
+#   bash cluster/submit_job.sh --mode run --display-name xpia-gemma-cert \
 #     --timeout-seconds 28800 --no-clean --slmx-cmd 'bash tools/gemma_cert_cluster_job.sh'
 # Then arm tools/await_aml_job.sh (env in ITS OWN process) + a fleet manifest row.
 set -uo pipefail

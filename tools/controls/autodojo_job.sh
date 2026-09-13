@@ -41,7 +41,7 @@ FORK="$ROOT/reference/autodojo"
 
 SUITE=""; ARM=""; MODEL=""; NAME=""; PROBEDIR=""; DIRECTION=""; ALPHA=""; LAYERS=""
 MATCH_SIGMA="__unset__"; GPU="0"; ITER="6"; OUTDIR=""; INJTASKS=""; VECTORS=""
-MAXNEW="4096"; DEPLOYMENT="gpt-5.4"; NVAR="5"; KVMASK=""; EXTRA=()
+MAXNEW="4096"; DEPLOYMENT="gpt-5.4"; NVAR="5"; KVMASK=""; AGRIPROBE=""; EXTRA=()
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -62,6 +62,7 @@ while [[ $# -gt 0 ]]; do
     --vectors)        VECTORS="$2"; shift 2 ;;
     --max-new)        MAXNEW="$2"; shift 2 ;;
     --kv-mask)        KVMASK="$2"; shift 2 ;;
+    --agri-probe)     AGRIPROBE="$2"; shift 2 ;;
     --deployment)     DEPLOYMENT="$2"; shift 2 ;;
     --dojo-defense)   DOJODEF="$2"; shift 2 ;;
     --extra)          EXTRA+=("$2"); shift 2 ;;     # raw passthrough flag
@@ -71,8 +72,8 @@ done
 
 [[ -n "$SUITE" && -n "$ARM" && -n "$MODEL" && -n "$NAME" && -n "$OUTDIR" ]] \
   || { echo "FATAL: need --suite --arm --model --name --outdir" >&2; exit 2; }
-[[ "$ARM" == "defended" || "$ARM" == "undefended" || "$ARM" == "cacheprune" || "$ARM" == "promptguard" || "$ARM" == "piguard" || "$ARM" == "deberta" || "$ARM" == "dojodef" ]] \
-  || { echo "FATAL: --arm defended|undefended|cacheprune|promptguard" >&2; exit 2; }
+[[ "$ARM" == "defended" || "$ARM" == "undefended" || "$ARM" == "cacheprune" || "$ARM" == "promptguard" || "$ARM" == "piguard" || "$ARM" == "deberta" || "$ARM" == "dojodef" || "$ARM" == "agri" ]] \
+  || { echo "FATAL: --arm defended|undefended|cacheprune|promptguard|agri" >&2; exit 2; }
 [[ -n "${XPIA_JUDGE_ENDPOINT:-}" ]] \
   || { echo "FATAL: export XPIA_JUDGE_ENDPOINT (Azure OpenAI resource)" >&2; exit 2; }
 [[ "$OUTDIR" = /* ]] || OUTDIR="$ROOT/$OUTDIR"
@@ -114,6 +115,13 @@ if [[ "$ARM" == "defended" ]]; then
   spec="$base&probe_dir=$PROBEDIR&direction=$DIRECTION&alpha=$ALPHA&layers=$LAYERS"
   [[ "$MATCH_SIGMA" != "__unset__" ]] && spec="$spec&match_sigma_to=$MATCH_SIGMA"
   spec="$spec&name=${NAME}-countersteer"
+  export AUTODOJO_REACHABILITY_LLM="$undef_spec"
+elif [[ "$ARM" == "agri" ]]; then
+  # AGRI (arXiv:2608.02657): probe-gated reasoning prefill inside the SAME plugin
+  # element (needs in-process hidden states). Reachability runs on the undefended
+  # element, exactly as for the steering arm. Requires --agri-probe.
+  [[ -n "${AGRIPROBE:-}" ]] || { echo "FATAL: agri arm needs --agri-probe" >&2; exit 2; }
+  spec="$base&agri_probe=$AGRIPROBE&name=${NAME}-agri"
   export AUTODOJO_REACHABILITY_LLM="$undef_spec"
 elif [[ "$ARM" == "cacheprune" ]]; then
   # CachePrune (arXiv:2504.21228) as the best-alternate-defense arm: the KV-mask

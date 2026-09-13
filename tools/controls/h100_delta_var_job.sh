@@ -12,7 +12,7 @@
 # model snapshot 6cee5e81 on both fabrics; torch 2.7.1+cu126 / transformers 5.14.1 /
 # tokenizers 0.22.2 pinned identically).
 #
-# Usage (inside a Singularity run-mode job, from the snapshot root):
+# Usage (inside a AML-cluster run-mode job, from the snapshot root):
 #   bash tools/controls/h100_delta_var_job.sh [N_REPS]
 set -u
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -28,7 +28,7 @@ export PYTHONPATH="$ROOT/reference/agentdyn/src${PYTHONPATH:+:$PYTHONPATH}"
   || { echo "FATAL: reference/agentdyn/src not staged"; echo "H100_DELTA_VAR_DONE rc=1"; exit 1; }
 
 # Seed + pin-assert the exact snapshot both prior measurements used.
-bash singularity/seed_model.sh --require openai/gpt-oss-20b \
+bash cluster/seed_model.sh --require openai/gpt-oss-20b \
   || { echo "SEED_FAIL openai/gpt-oss-20b"; echo "H100_DELTA_VAR_DONE rc=1"; exit 1; }
 SNAPDIR="$HF_HOME/hub/models--openai--gpt-oss-20b/snapshots"
 if [ ! -d "$SNAPDIR/6cee5e81ee83917806bbde320786a8fb61efebee" ]; then

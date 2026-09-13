@@ -203,10 +203,17 @@ def main():
                           f"/{len(prompts)}", flush=True)
             accs = [score(args.bench, it, c) for it, c in zip(items, comps)]
             key = f"{mode}:{arm}"
+            # sha256 over full texts: a STABLE fingerprint (the earlier
+            # hash(tuple(...)) was Python's salted hash -- useless across
+            # processes; 2026-09-13 audit). Persist FULL completions for every
+            # arm so tool-arm scores stay rescorable/regradable from disk.
+            import hashlib
+            _h = hashlib.sha256()
+            for _c in comps:
+                _h.update(_c.encode("utf-8", "surrogatepass")); _h.update(b"\x00")
             results["arms"][key] = {"acc": sum(accs) / len(accs), "per_item": accs,
-                                    "completions_sha": hash(tuple(comps)) & 0xffffffff}
-            if mode == "plain":
-                results["arms"][key]["completions"] = [c[:2000] for c in comps]
+                                    "completions_sha256": _h.hexdigest()}
+            results["arms"][key]["completions"] = list(comps)
             print(f"[bench] {args.bench} {key}: acc {sum(accs)/len(accs):.4f}",
                   flush=True)
         if mode == "plain" and "plain:baseline" in results["arms"] \

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Singularity driver: the §24f pre-registered SoA-defense benign composition-fidelity
+# AML-cluster driver: the §24f pre-registered SoA-defense benign composition-fidelity
 # GENERATION — four §24d cells, defense-on-clean arms only (no injection anywhere), via
 # tools/controls/soa_fidelity.py. Judging happens OFF-cluster afterwards
 # (judge_utility.py needs the Azure judge endpoint; this job only generates completions).
@@ -8,7 +8,7 @@
 # (mask staged as runs/cacheprune_mask.json); Qwen has no fitted mask (recorded gap).
 #
 # SUBMIT (queues behind the SoA batteries; do not displace them):
-#   bash singularity/submit_job.sh --mode run --display-name xpia-soa-fidelity \
+#   bash cluster/submit_job.sh --mode run --display-name xpia-soa-fidelity \
 #     --timeout-seconds 28800 --no-clean --slmx-cmd 'bash tools/controls/soa_fidelity_job.sh'
 set -uo pipefail
 
