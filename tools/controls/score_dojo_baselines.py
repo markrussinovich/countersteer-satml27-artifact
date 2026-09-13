@@ -65,59 +65,67 @@ def prow(label, sec, n, ua, pairs, err, host):
 
 hdr = (f"{'arm':<44}{'security v':>10}{'(n)':>6}{'utilAtk ^':>10}"
        f"{'benClean ^':>10}{'benDef ^':>9}{'delta pp':>9}{'(np)':>6}{'err':>5}  host")
-print(hdr)
 
-# comparators: raw undefended (attacked arm of the Aug-5 full run, same 180 cells)
-ref = rows_of("runs/agentdojo_run.shard[0-9].json")
-asec, an = mean_key(ref, "attacked", "security")
-autil, _ = mean_key(ref, "attacked", "utility")
-print(f"{'attacked undefended (comparator)':<44}{asec:>10.3f}{an:>6}{autil:>10.3f}"
-      f"{'':>10}{'':>9}{'':>9}{'':>6}{errs(ref,'attacked'):>5}  local-A100")
 
-# steering cell 1: dim_no_override_both a8.0 -- security AND benign from the SAME full run
-s1sec, s1n = mean_key(ref, "defended", "security")
-s1ua, _ = mean_key(ref, "defended", "utility")
-prow("steering dim_no_override_both a8.0 (ours)", s1sec, s1n, s1ua,
-     benign_pairs(ref), errs(ref, "defended"), "local-A100")
+def gptoss_table():
+    """The gpt-oss-20b baselines table (was module-level until 2026-09-11; moved into a
+    function so `benign_pairs`/`rows_of` are importable without printing the table --
+    dojo_scrub_regrade.py and score_dose_curve.py both import them)."""
+    print(hdr)
 
-# steering cell 2 (LOCKED, BEST_DEFENSE.md): combo_ovr8_pat1 a8.06 -- security from its
-# own 180-cell run, benign from ITS dedicated benign pairing artifact
-combo = rows_of("runs/agentdojo_combo_v2.shard[0-9].json")
-s2sec, s2n = mean_key(combo, "defended", "security")
-s2ua, _ = mean_key(combo, "defended", "utility")
-try:
-    bl = json.load(open("runs/dojo_benign_locked.json"))["results"]
-    bl_pairs = benign_pairs(bl)
-except FileNotFoundError:
-    bl_pairs = []
-prow("steering combo_ovr8_pat1 a8.06 (ours, LOCKED)", s2sec, s2n, s2ua,
-     bl_pairs, errs(combo, "defended"), "local/.7")
+    # comparators: raw undefended (attacked arm of the Aug-5 full run, same 180 cells)
+    ref = rows_of("runs/agentdojo_run.shard[0-9].json")
+    asec, an = mean_key(ref, "attacked", "security")
+    autil, _ = mean_key(ref, "attacked", "utility")
+    print(f"{'attacked undefended (comparator)':<44}{asec:>10.3f}{an:>6}{autil:>10.3f}"
+          f"{'':>10}{'':>9}{'':>9}{'':>6}{errs(ref,'attacked'):>5}  local-A100")
 
-for d in DEFS:
-    ar = rows_of(f"{D}/dojo_{d}_atk.shard[0-9].json")
-    br = rows_of(f"{D}/dojo_{d}_benign.shard[0-9].json")
-    # originals + gap files must tile the 180 cells: a VALID defended row per cell at most
-    # once (gap manifests are the exact complement of valid rows; assert, don't assume)
-    vk = [(r["suite"], r["user_task"], r["injection_task"], r["attack"]) for r in ar
-          if isinstance(r.get("defended"), dict) and "error" not in r["defended"]]
-    assert len(vk) == len(set(vk)), f"{d}: duplicate valid defended rows -- double count"
-    sec, n = mean_key(ar, "defended", "security")
-    ua, _ = mean_key(ar, "defended", "utility")
-    lbl = "dojo " + d + (" [mechanical]" if d == "tool_filter" else "")
-    prow(lbl, sec, n, ua, benign_pairs(br), errs(ar, "defended"), "singularity-H100")
-    if d == "tool_filter" and ar:
-        kl = [t for r in ar if isinstance(r.get("defended"), dict)
-              for t in r["defended"].get("tools_kept", [])]
-        fb = sum(r["defended"].get("filter_fallbacks", 0) for r in ar
-                 if isinstance(r.get("defended"), dict))
-        if kl:
-            shrunk = sum(1 for b, a2 in kl if a2 < b)
-            print(f"  [tool_filter engagement] {len(kl)} filter calls, "
-                  f"{shrunk} shrank the toolset, mean {sum(b for b,_ in kl)/len(kl):.1f} -> "
-                  f"{sum(a2 for _,a2 in kl)/len(kl):.1f} tools, {fb} full-completion "
-                  f"fallbacks (each weakens the filter vs a strict port)")
+    # steering cell 1: dim_no_override_both a8.0 -- security AND benign from the SAME run
+    s1sec, s1n = mean_key(ref, "defended", "security")
+    s1ua, _ = mean_key(ref, "defended", "utility")
+    prow("steering dim_no_override_both a8.0 (ours)", s1sec, s1n, s1ua,
+         benign_pairs(ref), errs(ref, "defended"), "local-A100")
 
-print("""
+    # steering cell 2 (LOCKED, BEST_DEFENSE.md): combo_ovr8_pat1 a8.06 -- security from
+    # its own 180-cell run, benign from ITS dedicated benign pairing artifact
+    combo = rows_of("runs/agentdojo_combo_v2.shard[0-9].json")
+    s2sec, s2n = mean_key(combo, "defended", "security")
+    s2ua, _ = mean_key(combo, "defended", "utility")
+    try:
+        bl = json.load(open("runs/dojo_benign_locked.json"))["results"]
+        bl_pairs = benign_pairs(bl)
+    except FileNotFoundError:
+        bl_pairs = []
+    prow("steering combo_ovr8_pat1 a8.06 (ours, LOCKED)", s2sec, s2n, s2ua,
+         bl_pairs, errs(combo, "defended"), "local/.7")
+
+    for d in DEFS:
+        ar = rows_of(f"{D}/dojo_{d}_atk.shard[0-9].json")
+        br = rows_of(f"{D}/dojo_{d}_benign.shard[0-9].json")
+        # originals + gap files must tile the 180 cells: a VALID defended row per cell at
+        # most once (gap manifests are the exact complement of valid rows; assert, don't
+        # assume)
+        vk = [(r["suite"], r["user_task"], r["injection_task"], r["attack"]) for r in ar
+              if isinstance(r.get("defended"), dict) and "error" not in r["defended"]]
+        assert len(vk) == len(set(vk)), f"{d}: duplicate valid defended rows -- double count"
+        sec, n = mean_key(ar, "defended", "security")
+        ua, _ = mean_key(ar, "defended", "utility")
+        lbl = "dojo " + d + (" [mechanical]" if d == "tool_filter" else "")
+        prow(lbl, sec, n, ua, benign_pairs(br), errs(ar, "defended"), "AML-cluster-H100")
+        if d == "tool_filter" and ar:
+            kl = [t for r in ar if isinstance(r.get("defended"), dict)
+                  for t in r["defended"].get("tools_kept", [])]
+            fb = sum(r["defended"].get("filter_fallbacks", 0) for r in ar
+                     if isinstance(r.get("defended"), dict))
+            if kl:
+                shrunk = sum(1 for b, a2 in kl if a2 < b)
+                print(f"  [tool_filter engagement] {len(kl)} filter calls, "
+                      f"{shrunk} shrank the toolset, mean "
+                      f"{sum(b for b,_ in kl)/len(kl):.1f} -> "
+                      f"{sum(a2 for _,a2 in kl)/len(kl):.1f} tools, {fb} full-completion "
+                      f"fallbacks (each weakens the filter vs a strict port)")
+
+    print("""
 legend: security v [tier 1] = AgentDojo per-injection checker (attacker task completed),
   mean over cells whose arm ran without error (n stated per row; 180 cells total).
 utilAtk ^ [tier 2] = AgentDojo utility under attack, raw level (same denominator as security).
@@ -127,7 +135,7 @@ benClean/benDef ^ [tier 2] = AgentDojo utility on clean episodes, raw model vs d
 caveats: all rows share a shortened base system message (first two sentences of AgentDojo's
   default) -- internally valid, NOT comparable to published AgentDojo tables. tool_filter's
   local port falls back to matching tool names in the full completion when the final channel
-  is empty (weakens that defense vs a strict port); fallback count printed above.""")
+  is empty (weakens that defense vs a strict port); fallback count printed above.""")  # noqa: E501
 
 
 def qwen_table(D):
@@ -153,7 +161,7 @@ def qwen_table(D):
         s, n = mean_key(ua, "defended", "security")
         u, _ = mean_key(ua, "defended", "utility")
         print(f"{'attacked undefended (same-process rerun)':<44}{s:>10.3f}{n:>6}{u:>10.3f}"
-              f"{'':>10}{'':>9}{'':>9}{'':>6}{errs(ua,'defended'):>5}  singularity-H100")
+              f"{'':>10}{'':>9}{'':>9}{'':>6}{errs(ua,'defended'):>5}  AML-cluster-H100")
     # CHAMPION cell (owner ruling 2026-08-31): dim_no_override_both @ 12 sigma, own-sigma,
     # layers 8,20,32 -- its own within-run benign pairing
     a12 = rows_of("runs/qwen_ad_a12_def.shard[0-9].json")
@@ -183,7 +191,7 @@ def qwen_table(D):
         sec, n = mean_key(ar, "defended", "security")
         uu, _ = mean_key(ar, "defended", "utility")
         lbl = "dojo " + d + (" [mechanical]" if d == "tool_filter" else "")
-        prow(lbl, sec, n, uu, benign_pairs(br), errs(ar, "defended"), "singularity-H100")
+        prow(lbl, sec, n, uu, benign_pairs(br), errs(ar, "defended"), "AML-cluster-H100")
         if d == "tool_filter":
             kl = [t for r in ar if isinstance(r.get("defended"), dict)
                   for t in r["defended"].get("tools_kept", [])]
@@ -257,10 +265,13 @@ legend: security v [1] AgentDojo's per-injection checker; utility ^ [2] their pe
   censoring signature, symmetric flips are regeneration noise.""")
 
 
-if "--qwen" in sys.argv:
-    print("\n=== Qwen3-30B-A3B-Thinking-2507 (same 180 cells, ChatML bridge) ===")
-    qwen_table(D)
+if __name__ == "__main__":
+    gptoss_table()
 
-if "--mn4096" in sys.argv:
-    print("\n=== gpt-oss-20b locked cell: budget re-anchoring (768 -> max_new 4096) ===")
-    reanchor_table()
+    if "--qwen" in sys.argv:
+        print("\n=== Qwen3-30B-A3B-Thinking-2507 (same 180 cells, ChatML bridge) ===")
+        qwen_table(D)
+
+    if "--mn4096" in sys.argv:
+        print("\n=== gpt-oss-20b locked cell: budget re-anchoring (768 -> max_new 4096) ===")
+        reanchor_table()

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Singularity driver: xleaf cross-model content-leaf transfer panels, GLM-4.5-Air +
+# AML-cluster driver: xleaf cross-model content-leaf transfer panels, GLM-4.5-Air +
 # Qwen3-30B on ONE 8xH100 node (pre-registered: tmp/xleaf/PREREG.md, 2026-09-09;
 # adversarially signed off with corrections C1/C2 applied; mirrors the gpt-oss
 # §26.13/§26.15 ladder with the EXISTING v1 selector -- transfer evidence, v1 caveat on
@@ -20,8 +20,8 @@
 # SIGMA GATES (post-stage, review1 C6): every shard log's [steer] line must carry the
 # shipped grid's announced sigma, rebuilt from the staged pkls before submission.
 #
-# SUBMIT (AML_* env exported; see singularity/README.md):
-#   bash singularity/submit_job.sh --mode run --display-name xpia-xleaf-panels \
+# SUBMIT (AML_* env exported; see cluster/README.md):
+#   bash cluster/submit_job.sh --mode run --display-name xpia-xleaf-panels \
 #     --timeout-seconds 57600 --no-clean \
 #     --slmx-cmd 'bash tools/controls/xleaf_panels_job.sh'
 set -uo pipefail
@@ -56,7 +56,7 @@ trap 'kill $SYNC_PID 2>/dev/null || true; sync_blob' EXIT
 
 seed() { # ORG/NAME EXPECTED_SHA
   local model="$1" sha="$2" t0=$SECONDS
-  bash singularity/seed_model.sh --require "$model" || { echo "SEED_FAIL $model"; return 1; }
+  bash cluster/seed_model.sh --require "$model" || { echo "SEED_FAIL $model"; return 1; }
   local snapdir="$HF_HOME/hub/models--${model//\//--}/snapshots"
   [ -d "$snapdir/$sha" ] \
     || { echo "SEED_SHA_MISMATCH $model: staged $(ls "$snapdir" 2>/dev/null) != $sha"; return 1; }

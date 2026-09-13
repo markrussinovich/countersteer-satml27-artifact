@@ -3,7 +3,7 @@
 # launched job gets a watch armed in the SAME turn as the launch).
 #
 # `await` in tools/common.sh only inspects the LOCAL process table, so it cannot cover a job
-# on .7/.9/.11; tools/await_aml_job.sh only covers Singularity jobs. This fills that gap.
+# on <FLEET_HOST_B>/<FLEET_HOST_C>/<FLEET_HOST_A>; tools/await_aml_job.sh only covers AML-cluster jobs. This fills that gap.
 #
 # It reuses the SAME discriminator as tools/common.sh:alive -- /proc/PID/exe, never the
 # command line. `pgrep -f PAT` matches any shell that merely QUOTES the pattern, and over ssh

@@ -1,13 +1,12 @@
 """Register the SoA batteries' DeBERTa filter as an AutoDojo pipeline defense.
 
 Clone of autodojo_promptguard_plugin.py (owner-approved detector-adaptive program,
-2026-09-10: DeBERTa is the strongest STATIC detector on all three flagships — 41x/88x/18x
-— with zero adaptive evidence; its classifier siblings collapse under AutoDojo
-optimization, PromptGuard-2 0.000->0.239 / CachePrune 0.000->0.208 on Qwen). Loaded via
+2026-09-10). Loaded via
 the fork's AGENTDOJO_DEFENSE_PLUGINS seam (autodojo_job.sh --arm deberta); the element is
 the EXACT SoA instrument: agentdojo_smoke.LocalPIDetector("pi_detector") — pinned
-protectai/deberta-v3-base-prompt-injection-v2 rev dd78b24e, trust_remote_code via the pinned revision, 480/64-token
-overlapping-window scan, upstream redaction string. Checkpoint resolves via
+protectai/deberta-v3-base-prompt-injection-v2 rev
+90c9989b1a342275dd0d1a95aad283c04e075671, without remote code, using a 480/64-token
+overlapping-window scan and the upstream redaction string. Checkpoint resolves via
 XPIA_MODEL_STORE (flat dir `DeBERTa`), never the hub, on boxes without credentials.
 
 Engagement telemetry as in the PromptGuard plugin: a filter row with zero engagements is

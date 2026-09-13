@@ -1,0 +1,91 @@
+{
+ "runs_glob": "runs/dojo_soa_llama31_cluster/pi_piguard_llama31_mn4096.shard[0-9].json",
+ "files": [
+  "runs/dojo_soa_llama31_cluster/pi_piguard_llama31_mn4096.shard0.json",
+  "runs/dojo_soa_llama31_cluster/pi_piguard_llama31_mn4096.shard1.json",
+  "runs/dojo_soa_llama31_cluster/pi_piguard_llama31_mn4096.shard2.json",
+  "runs/dojo_soa_llama31_cluster/pi_piguard_llama31_mn4096.shard3.json",
+  "runs/dojo_soa_llama31_cluster/pi_piguard_llama31_mn4096.shard4.json",
+  "runs/dojo_soa_llama31_cluster/pi_piguard_llama31_mn4096.shard5.json",
+  "runs/dojo_soa_llama31_cluster/pi_piguard_llama31_mn4096.shard6.json",
+  "runs/dojo_soa_llama31_cluster/pi_piguard_llama31_mn4096.shard7.json"
+ ],
+ "config_summary": {
+  "model": "meta-llama/Llama-3.1-8B-Instruct",
+  "direction": "dim_no_override_both",
+  "alpha": 8.0,
+  "layers": "12,16,20",
+  "dojo_defense": "pi_detector_piguard",
+  "stack_dojo": null,
+  "max_new": 4096,
+  "kv_mask": false,
+  "benchmark_version": "v1.2.1",
+  "scrub_args": true
+ },
+ "skipped_files": [],
+ "arms": {
+  "clean": {
+   "n": 180,
+   "raw_util": 0.25555555555555554,
+   "scrub_util": 0.25555555555555554,
+   "raw_sec": null,
+   "scrub_sec": null,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 0
+  },
+  "cleanplus": {
+   "n": 180,
+   "raw_util": 0.21666666666666667,
+   "scrub_util": 0.21666666666666667,
+   "raw_sec": null,
+   "scrub_sec": null,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 0
+  },
+  "attacked": {
+   "n": 180,
+   "raw_util": 0.2111111111111111,
+   "scrub_util": 0.2111111111111111,
+   "raw_sec": 0.1,
+   "scrub_sec": 0.1,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 180
+  },
+  "defended": {
+   "n": 180,
+   "raw_util": 0.17777777777777778,
+   "scrub_util": 0.17777777777777778,
+   "raw_sec": 0.005555555555555556,
+   "scrub_sec": 0.005555555555555556,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 180
+  }
+ },
+ "benign": {
+  "cleanplus": {
+   "n_pairs": 56,
+   "raw": {
+    "clean": 0.23214285714285715,
+    "cleanplus": 0.21428571428571427,
+    "pct_of_clean": 92.30769230769229
+   },
+   "scrubbed": {
+    "clean": 0.23214285714285715,
+    "cleanplus": 0.21428571428571427,
+    "pct_of_clean": 92.30769230769229
+   }
+  }
+ }
+}

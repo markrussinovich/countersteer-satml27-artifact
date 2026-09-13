@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Singularity driver: detector-filter comparison on GLM-4.5-Air (owner order 2026-09-10:
+# AML-cluster driver: detector-filter comparison on GLM-4.5-Air (owner order 2026-09-10:
 # "should we try piguard on glm? ... proceed") — the third CAPABLE-model point for the
 # detector-cost-scales-with-capability question (gpt-oss fp 56% / Qwen fp 31% benign
 # deletion vs near-free on the low-utility Llama; GLM has the program's HIGHEST AgentDojo
@@ -15,11 +15,11 @@
 #   3 pi_promptguard_glm  PromptGuard-2-86M (gated; store-resolved)
 #
 # SUBMIT:
-#   bash singularity/submit_job.sh --mode run --display-name xpia-dojo-filters-glm \
+#   bash cluster/submit_job.sh --mode run --display-name xpia-dojo-filters-glm \
 #     --timeout-seconds 79200 --no-clean --slmx-cmd 'bash tools/controls/dojo_filters_glm_job.sh'
 set -uo pipefail
 
-bash singularity/seed_model.sh --require zai-org/GLM-4.5-Air
+bash cluster/seed_model.sh --require zai-org/GLM-4.5-Air
 
 LOCAL=runs/dojo_filters_glm
 LOGD=logs_filters_glm

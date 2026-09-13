@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Qwen dojo-baseline SMOKE (Singularity): engagement proof (1 attacked cell x 3 defenses,
+# Qwen dojo-baseline SMOKE (AML-cluster): engagement proof (1 attacked cell x 3 defenses,
 # rendered-prompt evidence, GPU 0) + the real CLI path (4 attack-landing cells per defense,
 # --defended-only, GPUs 1-3). Local writes, blob copy at exit (blobfuse ENOENT lesson from
 # dojo-baselines-20260830).

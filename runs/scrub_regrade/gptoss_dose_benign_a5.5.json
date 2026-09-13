@@ -1,0 +1,4 @@
+{
+ "runs_glob": "runs/dose_gptoss/benign_a5.5.json",
+ "not_regradable": "no regradable rows: runs/dose_gptoss/benign_a5.5.json: no .transcripts.json sibling"
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Singularity job: AgentDojo inbuilt-defense baselines on Qwen3-30B-A3B-Thinking-2507,
+# AML-cluster job: AgentDojo inbuilt-defense baselines on Qwen3-30B-A3B-Thinking-2507,
 # same 180 cells as runs/qwen_agentdojo_run.shard*. Adds a SAME-PROCESS undefended
 # attacked comparator (--direction '' = raw pipeline, identical code path/host/hardware),
 # so the Qwen table does not lean on the .7 A100 comparator across hosts.

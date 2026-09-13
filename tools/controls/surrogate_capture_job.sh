@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Singularity job driver: the ATTACKER'S SURROGATE re-derivation capture (FINDINGS 10v
+# AML-cluster job driver: the ATTACKER'S SURROGATE re-derivation capture (FINDINGS 10v
 # addendum, surrogate-defense white-box transfer).
 #
 # Re-runs the factorial capture behind the deployed `dim_no_override_both` with

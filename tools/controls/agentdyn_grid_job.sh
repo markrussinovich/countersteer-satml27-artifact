@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Singularity driver: the AgentDyn FULL-GRID program (benchmark-expansion agent,
+# AML-cluster driver: the AgentDyn FULL-GRID program (benchmark-expansion agent,
 # 2026-09-05; smoke gate PASSED on gpt-oss — FINDINGS 25a). One invocation runs one or
 # more stages IN ORDER on one 8xH100 node; partial completion still delivers whole stages
 # (the SoA priority-order pattern).
@@ -48,11 +48,11 @@
 # snapshot SHA — the first gptoss seed under a real job closes the §23ao staging-smoke
 # condition (README caveat: blobfuse/image seam previously uncertified in-job).
 #
-# SUBMIT (AML_* env exported; see singularity/README.md):
-#   bash singularity/submit_job.sh --mode run --display-name xpia-agentdyn-gptoss-glm \
+# SUBMIT (AML_* env exported; see cluster/README.md):
+#   bash cluster/submit_job.sh --mode run --display-name xpia-agentdyn-gptoss-glm \
 #     --timeout-seconds 84000 --no-clean \
 #     --slmx-cmd 'bash tools/controls/agentdyn_grid_job.sh gptoss glm'
-#   bash singularity/submit_job.sh --mode run --display-name xpia-agentdyn-qwen-ipi \
+#   bash cluster/submit_job.sh --mode run --display-name xpia-agentdyn-qwen-ipi \
 #     --timeout-seconds 72000 --no-clean \
 #     --slmx-cmd 'bash tools/controls/agentdyn_grid_job.sh qwen ipi'
 set -uo pipefail
@@ -64,7 +64,7 @@ OUT=${OUT:-outputs}
 LOGD=logs_agentdyn
 mkdir -p "$OUT" "$LOGD" runs
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-# Load OFFLINE after blob seeding (singularity/README.md caveat: an online
+# Load OFFLINE after blob seeding (cluster/README.md caveat: an online
 # from_pretrained re-resolves the hub's refs/main and can drift off the staged pin).
 # Everything these stages load resolves locally: seeded snapshots, staged probe pkls,
 # the staged pinned IPI attacks dump.
@@ -86,7 +86,7 @@ trap 'kill $SYNC_PID 2>/dev/null || true; sync_blob' EXIT
 
 seed() { # ORG/NAME EXPECTED_SHA
   local model="$1" sha="$2" t0=$SECONDS
-  bash singularity/seed_model.sh --require "$model" || { echo "SEED_FAIL $model"; return 1; }
+  bash cluster/seed_model.sh --require "$model" || { echo "SEED_FAIL $model"; return 1; }
   local snapdir="$HF_HOME/hub/models--${model//\//--}/snapshots"
   if [ ! -d "$snapdir/$sha" ]; then
     echo "SEED_SHA_MISMATCH $model: staged $(ls "$snapdir" 2>/dev/null) != expected $sha"

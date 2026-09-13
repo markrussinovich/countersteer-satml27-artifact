@@ -1,0 +1,91 @@
+{
+ "runs_glob": "runs/dojo_soa_llama31_cluster/countersteer_llama31_mn4096.shard[0-9].json",
+ "files": [
+  "runs/dojo_soa_llama31_cluster/countersteer_llama31_mn4096.shard0.json",
+  "runs/dojo_soa_llama31_cluster/countersteer_llama31_mn4096.shard1.json",
+  "runs/dojo_soa_llama31_cluster/countersteer_llama31_mn4096.shard2.json",
+  "runs/dojo_soa_llama31_cluster/countersteer_llama31_mn4096.shard3.json",
+  "runs/dojo_soa_llama31_cluster/countersteer_llama31_mn4096.shard4.json",
+  "runs/dojo_soa_llama31_cluster/countersteer_llama31_mn4096.shard5.json",
+  "runs/dojo_soa_llama31_cluster/countersteer_llama31_mn4096.shard6.json",
+  "runs/dojo_soa_llama31_cluster/countersteer_llama31_mn4096.shard7.json"
+ ],
+ "config_summary": {
+  "model": "meta-llama/Llama-3.1-8B-Instruct",
+  "direction": "dim_no_override_achf",
+  "alpha": 5.0,
+  "layers": "12,16,20",
+  "dojo_defense": null,
+  "stack_dojo": null,
+  "max_new": 4096,
+  "kv_mask": false,
+  "benchmark_version": "v1.2.1",
+  "scrub_args": true
+ },
+ "skipped_files": [],
+ "arms": {
+  "clean": {
+   "n": 180,
+   "raw_util": 0.25555555555555554,
+   "scrub_util": 0.25555555555555554,
+   "raw_sec": null,
+   "scrub_sec": null,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 0
+  },
+  "cleanplus": {
+   "n": 180,
+   "raw_util": 0.2388888888888889,
+   "scrub_util": 0.2388888888888889,
+   "raw_sec": null,
+   "scrub_sec": null,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 0
+  },
+  "attacked": {
+   "n": 180,
+   "raw_util": 0.2111111111111111,
+   "scrub_util": 0.2111111111111111,
+   "raw_sec": 0.1,
+   "scrub_sec": 0.1,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 180
+  },
+  "defended": {
+   "n": 180,
+   "raw_util": 0.22777777777777777,
+   "scrub_util": 0.22777777777777777,
+   "raw_sec": 0.06111111111111111,
+   "scrub_sec": 0.06111111111111111,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 180
+  }
+ },
+ "benign": {
+  "cleanplus": {
+   "n_pairs": 56,
+   "raw": {
+    "clean": 0.23214285714285715,
+    "cleanplus": 0.25,
+    "pct_of_clean": 107.6923076923077
+   },
+   "scrubbed": {
+    "clean": 0.23214285714285715,
+    "cleanplus": 0.25,
+    "pct_of_clean": 107.6923076923077
+   }
+  }
+ }
+}

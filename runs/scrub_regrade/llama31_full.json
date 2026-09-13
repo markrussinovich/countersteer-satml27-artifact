@@ -1,0 +1,87 @@
+{
+ "runs_glob": "runs/llama31_agentdojo_run.shard[0-9].json",
+ "files": [
+  "runs/llama31_agentdojo_run.shard0.json",
+  "runs/llama31_agentdojo_run.shard1.json",
+  "runs/llama31_agentdojo_run.shard2.json",
+  "runs/llama31_agentdojo_run.shard3.json"
+ ],
+ "config_summary": {
+  "model": "meta-llama/Llama-3.1-8B-Instruct",
+  "direction": "dim_no_override_achf",
+  "alpha": 5.0,
+  "layers": "12,16,20",
+  "dojo_defense": null,
+  "stack_dojo": null,
+  "max_new": 4096,
+  "kv_mask": false,
+  "benchmark_version": "v1.2.1",
+  "scrub_args": true
+ },
+ "skipped_files": [],
+ "arms": {
+  "clean": {
+   "n": 180,
+   "raw_util": 0.2777777777777778,
+   "scrub_util": 0.2777777777777778,
+   "raw_sec": null,
+   "scrub_sec": null,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 0
+  },
+  "cleanplus": {
+   "n": 180,
+   "raw_util": 0.25555555555555554,
+   "scrub_util": 0.25555555555555554,
+   "raw_sec": null,
+   "scrub_sec": null,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 0
+  },
+  "attacked": {
+   "n": 180,
+   "raw_util": 0.2222222222222222,
+   "scrub_util": 0.2222222222222222,
+   "raw_sec": 0.1,
+   "scrub_sec": 0.1,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 180
+  },
+  "defended": {
+   "n": 180,
+   "raw_util": 0.2222222222222222,
+   "scrub_util": 0.2222222222222222,
+   "raw_sec": 0.05,
+   "scrub_sec": 0.05,
+   "util_flips": [],
+   "sec_flips": [],
+   "replay_mismatch": [],
+   "errors_skipped": 0,
+   "sec_denominator": 180
+  }
+ },
+ "benign": {
+  "cleanplus": {
+   "n_pairs": 56,
+   "raw": {
+    "clean": 0.26785714285714285,
+    "cleanplus": 0.26785714285714285,
+    "pct_of_clean": 100.0
+   },
+   "scrubbed": {
+    "clean": 0.26785714285714285,
+    "cleanplus": 0.26785714285714285,
+    "pct_of_clean": 100.0
+   }
+  }
+ }
+}

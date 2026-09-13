@@ -447,25 +447,39 @@ def build_pipeline(model, tok, a, direction):
     # coordinates over the tool spans (PrunedKVCache) instead of steering; the LLM gets
     # direction=None so the two defenses can never stack in one arm.
     kvm = getattr(a, "kv_mask", None) if direction else None
-    if sum(bool(x) for x in (dojo, kvm, stack)) > 1:
-        raise ValueError("--dojo-defense / --kv-mask / --stack-dojo are mutually exclusive")
+    # AGRI baseline (arXiv:2608.02657): with --agri-probe set, the defended/cleanplus arms
+    # run the probe-gated reasoning prefill around the UNSTEERED local model, exactly the
+    # --kv-mask pattern: direction=None on the LLM so defenses can never stack in one arm.
+    agri_spec = getattr(a, "agri_probe", None) if direction else None
+    if sum(bool(x) for x in (dojo, kvm, stack, agri_spec)) > 1:
+        raise ValueError("--dojo-defense / --kv-mask / --stack-dojo / --agri-probe are "
+                         "mutually exclusive")
     if stack and stack not in STACKABLE_DEFENSES:
         raise ValueError(f"--stack-dojo {stack!r} not stackable; one of {STACKABLE_DEFENSES}")
+    agri_gate = None
+    if agri_spec:
+        from agri_gate import AGRIGate
+        agri_gate = AGRIGate(model, agri_spec)
     llm = SteeredLLM(model, tok, probe_dir=a.probe_dir,
-                     direction=None if (dojo or kvm) else direction,
+                     direction=None if (dojo or kvm or agri_spec) else direction,
                      layers=[int(x) for x in a.layers.split(",")], alpha=a.alpha,
                      match_sigma_to=getattr(a, "match_sigma_to", "dim_no_override"),
-                     max_new=a.max_new, kv_mask=kvm,
+                     max_new=a.max_new, kv_mask=kvm, agri=agri_gate,
+                     steer_mode=(getattr(a, "steer_mode", "add")
+                                 if (direction and not (dojo or kvm or agri_spec))
+                                 else "add"),
                      # dose schedule (§26.5 item 2) rides ONLY on the steered arms; the
                      # unsteered clean/attacked/--dojo-defense/--kv-mask arms stay
                      # schedule="fixed" (SteeredLLM refuses a non-fixed schedule with no
                      # direction -- the §23e no-op-label class)
                      schedule=(getattr(a, "steer_schedule", "fixed")
-                               if (direction and not (dojo or kvm)) else "fixed"),
+                               if (direction and not (dojo or kvm or agri_spec))
+                               else "fixed"),
                      # content-leaf span selector (§26.12): steered arms only, same
                      # no-op-label guard as the schedule
                      span_select=(getattr(a, "span_select", "full")
-                                  if (direction and not (dojo or kvm)) else "full"))
+                                  if (direction and not (dojo or kvm or agri_spec))
+                                  else "full"))
     base_system = (yaml_system_message() if getattr(a, "system", "short") == "yaml"
                    else SYSTEM)
     system, pre, loop = base_system, [], [ToolsExecutor(), llm]
@@ -501,6 +515,7 @@ def build_pipeline(model, tok, a, direction):
     # all. `local` is their key for a self-hosted model and maps to the prose "Local model".
     pipe.name = (f"local-dojo-{dojo}" if dojo
                  else "local-cacheprune" if kvm
+                 else "local-agri" if agri_spec
                  else f"local-steered-{direction}-stack-{stack}" if stack
                  else f"local-steered-{direction}" if direction else "local-undefended")
     # ASSERT, do not assume, that the arms see the SAME injection text. The attack personalises

@@ -32,7 +32,7 @@ PY=${PY:-.venv/bin/python}
 
 CFG="${1:?usage: evaluate.sh configs/<model>.json [--corpus C] [--n-eval N] [--stage sweep|confirm] [--gpu K] [--agentic]}"
 shift
-CORPUS=""; NEVAL=8; GPU=0; AGENTIC=0; STAGE=sweep; UNDEF=0; DEFENSE=""; KVMASK=""
+CORPUS=""; NEVAL=8; GPU=0; AGENTIC=0; STAGE=sweep; UNDEF=0; DEFENSE=""; KVMASK=""; SHARD=0; NSHARD=1
 while [[ $# -gt 0 ]]; do case "$1" in
   --corpus) CORPUS="$2"; shift 2;;
   --n-eval) NEVAL="$2"; shift 2;;
@@ -42,6 +42,8 @@ while [[ $# -gt 0 ]]; do case "$1" in
   --undefended-only) UNDEF=1; shift;;
   --defense) DEFENSE="$2"; AGENTIC=1; shift 2;;
   --kv-mask) KVMASK="$2"; AGENTIC=1; shift 2;;
+  --shard) SHARD="$2"; shift 2;;
+  --nshard) NSHARD="$2"; shift 2;;
   *) echo "unknown option: $1" >&2; exit 2;;
 esac; done
 
@@ -55,7 +57,8 @@ case "$MODEL" in zai-org/GLM-4.5-Air) DEVICE="auto";; esac
 
 if [[ "$AGENTIC" == 1 ]]; then
   RARGS=(--model "$MODEL" --probe-dir "$PD" --max-new "$MNA"
-         --cells runs/agentdojo_cells.json --no-adjudicate)
+         --cells runs/agentdojo_cells.json --no-adjudicate
+         --shard "$SHARD" --nshard "$NSHARD")
   if [[ -n "$KVMASK" ]]; then
     LABEL="cacheprune"; RARGS+=(--kv-mask "$KVMASK")
     echo "== AgentDojo 4-arm battery: $MODEL, CachePrune ($KVMASK, mn$MNA)"
@@ -68,7 +71,7 @@ if [[ "$AGENTIC" == 1 ]]; then
     echo "== AgentDojo 4-arm battery: $MODEL ($DIR @ $ALPHA, L$LAYERS, mn$MNA)"
   fi
   CUDA_VISIBLE_DEVICES=$GPU "$PY" tools/controls/agentdojo_run.py "${RARGS[@]}" \
-    --out "$PD/agentdojo_run_${LABEL}.json"
+    --out "$PD/agentdojo_run_${LABEL}.shard${SHARD}.json"
   echo "== artifact: $PD/agentdojo_run_${LABEL}.json (AgentDojo's own checkers inside)"
   exit 0
 fi
