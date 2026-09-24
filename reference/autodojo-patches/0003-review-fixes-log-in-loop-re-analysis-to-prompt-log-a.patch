@@ -1,0 +1,108 @@
+From cc60aeb30a03e498198232228e6abe1e81a6842a Mon Sep 17 00:00:00 2001
+From: Anonymized <anon@example.com>
+Date: Sat, 5 Sep 2026 19:08:33 +0000
+Subject: [PATCH 3/8] review fixes: log in-loop re-analysis to prompt log;
+ atomic cache saves; reachability print; one-cache-per-arm invariant comment
+
+Adversarial review 2026-09-05 required items 4 (partial: call accounting) and
+recommended items (write-then-replace for the incremental save -- the project's own
+documented truncation landmine; misleading 'reachability_pipeline=shared' print;
+cache-isolation invariant documented).
+---
+ agentdojo/variant_generation/llm_utils.py     |  6 ++++
+ .../variant_generation/optimize_variants.py   | 34 ++++++++++++++++---
+ 2 files changed, 35 insertions(+), 5 deletions(-)
+
+diff --git a/agentdojo/variant_generation/llm_utils.py b/agentdojo/variant_generation/llm_utils.py
+index 95d1599..c9b2d4f 100644
+--- a/agentdojo/variant_generation/llm_utils.py
++++ b/agentdojo/variant_generation/llm_utils.py
+@@ -83,6 +83,12 @@ PROVIDERS = {
+ # deliberate re-sample of an identical prompt (the optimizer retries after a parse
+ # failure with an unchanged leaderboard) still reaches the API instead of replaying
+ # the same failed output forever; a resumed/re-run pass replays deterministically.
++#
++# INVARIANT (adversarial review, 2026-09-05): ONE CACHE FILE PER (suite, model, ARM).
++# The key alone is NOT sufficient isolation — the optimizer is black-box, so a
++# defended and an undefended arm at the same leaderboard state can produce byte-
++# identical prompts, and a shared file would replay one arm's output into the other.
++# Callers must set a distinct AUTODOJO_LLM_CACHE per arm (autodojo_job.sh does).
+ 
+ _AZ_TOKEN: dict = {"value": None, "t": 0.0}
+ _AZ_CACHE: dict = {"path": None, "data": None, "seen": None}
+diff --git a/agentdojo/variant_generation/optimize_variants.py b/agentdojo/variant_generation/optimize_variants.py
+index a3638ae..f5131cd 100644
+--- a/agentdojo/variant_generation/optimize_variants.py
++++ b/agentdojo/variant_generation/optimize_variants.py
+@@ -204,6 +204,20 @@ SUITE_CONFIGS: dict[str, dict] = {
+ # ── Utility functions ─────────────────────────────────────────────────────────
+ 
+ 
++def _atomic_json_dump(obj, path) -> None:
++    """Serialize FIRST, then write to a temp file and os.replace into place.
++
++    xpia review fix: `json.dump` streaming into an open handle leaves a truncated,
++    unresumable cache if the process is killed mid-save — the incremental per-cell
++    save makes that window recur every few minutes for the whole run.
++    """
++    data = json.dumps(obj, indent=2, ensure_ascii=False)
++    tmp = str(path) + ".tmp"
++    with open(tmp, "w") as f:
++        f.write(data)
++    os.replace(tmp, str(path))
++
++
+ def yaml_escape(text):
+     """Escape injection text for safe embedding inside YAML double-quoted scalars."""
+     text = text.replace('\\', '\\\\')
+@@ -604,7 +618,8 @@ class DojoASREvaluator:
+                   f"AUTODOJO_REACHABILITY_LLM={reach_spec}")
+         print(f"[DojoASREvaluator] suite={suite_name}, model={model}, "
+               f"model_id={model_id}, defense={defense}, "
+-              f"reachability_pipeline={'shared' if defense is None else 'no-defense (separate)'}"
++              f"reachability_pipeline="
++              f"{'env-override (undefended)' if reach_spec else ('shared' if defense is None else 'no-defense (separate)')}"
+               + (f", defense_model={defense_model_id or defense_model}, "
+                  f"drift_cache_dir={drift_cache_dir}, "
+                  f"drift_cache_label={drift_cache_label or defense_model_id or defense_model}"
+@@ -1958,6 +1973,17 @@ def main() -> None:
+                             benign_doc, leaderboard_str,
+                             tool_descriptions_str,
+                             verbose=args.verbose,
++                            # xpia review fix: the in-loop re-analysis was the ONE
++                            # LLM call not written to the prompt log, making the
++                            # per-cell call accounting unauditable (smoke2: 5 API
++                            # calls, 4 log entries).
++                            prompt_log_path=prompt_log_path,
++                            log_context={
++                                "suite": suite_name,
++                                "inj_task_id": task_id,
++                                "vec_id": vec_id,
++                                "phase": f"reanalysis_after_step_{step + 1}",
++                            },
+                         )
+                         steps_since_last_analysis = 0
+                         print(f"    [Analyzer] Re-analyzed after step {step + 1}")
+@@ -2028,8 +2054,7 @@ def main() -> None:
+                 # leaves a resumable cache on disk. Cheap (one JSON dump per cell,
+                 # KB-MB scale), and makes --resume meaningful.
+                 if not args.dry_run:
+-                    with open(cache_path, "w") as f:
+-                        json.dump(cache, f, indent=2, ensure_ascii=False)
++                    _atomic_json_dump(cache, cache_path)
+ 
+                 best = sorted_pop[0]
+                 print(f"    Best: asr={best.get('asr', 0)*100:.0f}%, "
+@@ -2041,8 +2066,7 @@ def main() -> None:
+             print(f"\n  [dry-run] Cache not saved for {suite_name}")
+             continue
+ 
+-        with open(cache_path, "w") as f:
+-            json.dump(cache, f, indent=2, ensure_ascii=False)
++        _atomic_json_dump(cache, cache_path)
+         print(f"\n  Saved: {cache_path}")
+         cost_tracker.write_summary(Path(cache_path).with_name("run_cost.json"))
+         print(f"\nDone. Use with:")
+-- 
+2.34.1
+

@@ -1,0 +1,44 @@
+From 40fbcd3ecb9aa278c343c04850edbc8b84e1a37b Mon Sep 17 00:00:00 2001
+From: Anonymized <anon@example.com>
+Date: Mon, 7 Sep 2026 20:36:27 +0000
+Subject: [PATCH 8/8] trace path: guard the user-task utility checker like
+ run_task_with_pipeline (review fix 3)
+
+---
+ .../variant_generation/optimize_variants.py   | 20 +++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/agentdojo/variant_generation/optimize_variants.py b/agentdojo/variant_generation/optimize_variants.py
+index 3944a6a..06c9fe8 100644
+--- a/agentdojo/variant_generation/optimize_variants.py
++++ b/agentdojo/variant_generation/optimize_variants.py
+@@ -836,10 +836,22 @@ class DojoASREvaluator:
+ 
+         stack_trace = functions_stack_trace_from_messages(messages)
+ 
+-        utility = self.suite._check_task_result(
+-            user_task, model_output or [], pre_environment,
+-            task_environment, stack_trace,
+-        )
++        # xpia integration (prereg v3.3, review fix 3): same guard as the fork's
++        # task_suite.run_task_with_pipeline -- upstream user-task UTILITY checkers can
++        # crash on an agent-mutated environment (KeyError 'Alice', slack
++        # user_tasks.py:387), and this trace path runs on EVERY reachability pass. A
++        # crash here scores utility=False (the trace consumes it diagnostically only);
++        # the SECURITY check stays unguarded so a tier-1 checker crash still propagates.
++        try:
++            utility = self.suite._check_task_result(
++                user_task, model_output or [], pre_environment,
++                task_environment, stack_trace,
++            )
++        except Exception as e:
++            print(f"      [_run_with_trace_using] utility checker crashed for "
++                  f"({user_task_id}, {injection_task_id}) -- {type(e).__name__}: {e}; "
++                  f"agent-mutated environment, scoring utility=False")
++            utility = False
+         security = self.suite._check_task_result(
+             injection_task, model_output or [], pre_environment,
+             task_environment, stack_trace,
+-- 
+2.34.1
+

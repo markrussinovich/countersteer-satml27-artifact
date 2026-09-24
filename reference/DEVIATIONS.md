@@ -2,7 +2,8 @@
 
 AGRI = Action-Guiding Reasoning Intervention, arXiv:2608.02657 ("Your Agentic LLMs
 Secretly Encode Latent Signals of Indirect Prompt-Injection Exposure"), code vendored at
-`reference/agri` (commit 03908cce, 2026-08-05). The released
+`reference/agri` (upstream github.com/jianshuod/IPI-exposure-signal, commit
+03908cce41e4dfb3d32ff5ee6be51ad4195f3171, 2026-08-05). The released
 repo contains the PROBE pipeline only; the intervention (gate + reasoning prefill) is
 "released upon acceptance" and is implemented here from the paper's specification.
 

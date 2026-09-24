@@ -1,0 +1,8 @@
+[screen] 30/60 tasks solvable on the clean arm
+    dailylife   12 solvable
+    github       8 solvable
+    shopping    10 solvable
+
+[only] 282 cells with important_instructions
+
+TOTAL 282 cells -> runs/agentdyn_cells.qwen.json

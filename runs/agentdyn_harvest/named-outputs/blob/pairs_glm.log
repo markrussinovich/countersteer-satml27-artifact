@@ -1,0 +1,8 @@
+[screen] 35/60 tasks solvable on the clean arm
+    dailylife   16 solvable
+    github      12 solvable
+    shopping     7 solvable
+
+[only] 180 cells with important_instructions
+
+TOTAL 180 cells -> runs/agentdyn_cells.glm.json

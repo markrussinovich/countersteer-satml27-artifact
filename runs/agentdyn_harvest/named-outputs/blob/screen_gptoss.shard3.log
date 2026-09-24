@@ -1,0 +1,14 @@
+[transformers] MXFP4 quantization requires Triton: CUDA requires Triton >= 3.4.0, XPU/CPU requires Triton >= 3.5.0. Please install triton: `pip install triton`. We will default to dequantizing the model to bf16.
+Loading weights:   0%|          | 0/411 [00:00<?, ?it/s]Loading weights:   0%|          | 1/411 [00:00<01:15,  5.43it/s]Loading weights:   0%|          | 2/411 [00:00<01:48,  3.76it/s]Loading weights:   1%|          | 5/411 [00:00<01:00,  6.74it/s]Loading weights:   2%|▏         | 7/411 [00:01<00:55,  7.27it/s]Loading weights:   5%|▌         | 22/411 [00:01<00:14, 26.29it/s]Loading weights:   6%|▌         | 25/411 [00:01<00:17, 22.29it/s]Loading weights:   9%|▉         | 39/411 [00:01<00:10, 34.31it/s]Loading weights:  10%|█         | 43/411 [00:01<00:12, 29.35it/s]Loading weights:  14%|█▎        | 56/411 [00:02<00:09, 37.03it/s]Loading weights:  15%|█▍        | 60/411 [00:02<00:11, 29.32it/s]Loading weights:  18%|█▊        | 73/411 [00:02<00:09, 35.70it/s]Loading weights:  19%|█▊        | 77/411 [00:02<00:10, 30.50it/s]Loading weights:  22%|██▏       | 90/411 [00:03<00:07, 44.38it/s]Loading weights:  23%|██▎       | 96/411 [00:03<00:07, 39.63it/s]Loading weights:  26%|██▌       | 107/411 [00:03<00:06, 49.82it/s]Loading weights:  47%|████▋     | 192/411 [00:03<00:01, 202.50it/s]Loading weights:  67%|██████▋   | 277/411 [00:03<00:00, 337.96it/s]Loading weights:  80%|███████▉  | 328/411 [00:03<00:00, 368.64it/s]Loading weights:  91%|█████████ | 374/411 [00:03<00:00, 355.67it/s]Loading weights: 100%|██████████| 411/411 [00:03<00:00, 104.48it/s]
+[screen] 8 of 60 user tasks (shard 3/8)
+  dailylife user_task_11    utility=1 calls=13
+  dailylife user_task_19    utility=1 calls=9
+  dailylife user_task_9     utility=1 calls=5
+  github    user_task_15    utility=1 calls=6
+  github    user_task_5     utility=0 calls=4
+  shopping  user_task_11    utility=0 calls=11
+  shopping  user_task_19    utility=0 calls=5
+  shopping  user_task_9     utility=1 calls=8
+
+[screen] solvable 5/8 in 378s
+wrote runs/agentdyn_screen.gptoss.shard3.json

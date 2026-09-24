@@ -1,0 +1,35 @@
+Loading weights:   0%|          | 0/735 [00:00<?, ?it/s]Loading weights:   2%|▏         | 16/735 [00:00<00:30, 23.95it/s]Loading weights:   4%|▍         | 32/735 [00:01<00:40, 17.33it/s]Loading weights:   7%|▋         | 48/735 [00:02<00:43, 15.68it/s]Loading weights:   9%|▊         | 64/735 [00:03<00:42, 15.77it/s]Loading weights:  11%|█         | 80/735 [00:04<00:40, 16.09it/s]Loading weights:  13%|█▎        | 96/735 [00:05<00:39, 16.32it/s]Loading weights:  15%|█▌        | 112/735 [00:06<00:37, 16.41it/s]Loading weights:  17%|█▋        | 128/735 [00:07<00:37, 16.38it/s]Loading weights:  20%|█▉        | 144/735 [00:08<00:35, 16.47it/s]Loading weights:  22%|██▏       | 160/735 [00:09<00:34, 16.51it/s]Loading weights:  24%|██▍       | 176/735 [00:10<00:33, 16.52it/s]Loading weights:  26%|██▌       | 192/735 [00:11<00:32, 16.67it/s]Loading weights:  28%|██▊       | 208/735 [00:12<00:31, 16.63it/s]Loading weights:  30%|███       | 224/735 [00:13<00:30, 16.67it/s]Loading weights:  33%|███▎      | 240/735 [00:14<00:29, 16.64it/s]Loading weights:  35%|███▍      | 256/735 [00:15<00:28, 16.63it/s]Loading weights:  37%|███▋      | 272/735 [00:16<00:27, 16.66it/s]Loading weights:  39%|███▉      | 288/735 [00:17<00:26, 16.69it/s]Loading weights:  41%|████▏     | 304/735 [00:18<00:25, 16.69it/s]Loading weights:  44%|████▎     | 320/735 [00:19<00:24, 16.71it/s]Loading weights:  46%|████▌     | 336/735 [00:20<00:23, 16.72it/s]Loading weights:  48%|████▊     | 352/735 [00:21<00:22, 16.71it/s]Loading weights:  50%|█████     | 368/735 [00:22<00:21, 16.69it/s]Loading weights:  52%|█████▏    | 384/735 [00:23<00:20, 16.85it/s]Loading weights:  54%|█████▍    | 400/735 [00:24<00:19, 16.81it/s]Loading weights:  57%|█████▋    | 416/735 [00:24<00:18, 16.84it/s]Loading weights:  59%|█████▉    | 432/735 [00:25<00:18, 16.82it/s]Loading weights:  61%|██████    | 448/735 [00:26<00:17, 16.81it/s]Loading weights:  63%|██████▎   | 464/735 [00:27<00:16, 16.81it/s]Loading weights:  65%|██████▌   | 480/735 [00:28<00:15, 16.77it/s]Loading weights:  67%|██████▋   | 496/735 [00:29<00:14, 16.74it/s]Loading weights:  70%|██████▉   | 512/735 [00:30<00:13, 16.71it/s]Loading weights:  72%|███████▏  | 528/735 [00:31<00:12, 16.70it/s]Loading weights:  74%|███████▍  | 544/735 [00:32<00:11, 16.69it/s]Loading weights:  76%|███████▌  | 560/735 [00:33<00:10, 16.67it/s]Loading weights:  78%|███████▊  | 576/735 [00:34<00:09, 16.80it/s]Loading weights:  81%|████████  | 592/735 [00:35<00:08, 16.75it/s]Loading weights:  83%|████████▎ | 608/735 [00:36<00:07, 16.73it/s]Loading weights:  85%|████████▍ | 624/735 [00:37<00:06, 16.72it/s]Loading weights:  87%|████████▋ | 640/735 [00:38<00:05, 16.70it/s]Loading weights:  89%|████████▉ | 656/735 [00:39<00:04, 16.73it/s]Loading weights:  91%|█████████▏| 672/735 [00:40<00:03, 16.80it/s]Loading weights:  94%|█████████▎| 688/735 [00:41<00:02, 16.85it/s]Loading weights:  96%|█████████▌| 704/735 [00:42<00:01, 16.89it/s]Loading weights:  98%|█████████▊| 720/735 [00:43<00:00, 16.82it/s]Loading weights: 100%|██████████| 735/735 [00:43<00:00, 17.02it/s]
+[screen] 30 of 60 user tasks (shard 0/2)
+  dailylife user_task_0     utility=1 calls=7
+  dailylife user_task_10    utility=0 calls=11
+  dailylife user_task_12    utility=0 calls=10
+  dailylife user_task_14    utility=1 calls=12
+  dailylife user_task_16    utility=1 calls=7
+  dailylife user_task_18    utility=0 calls=6
+  dailylife user_task_2     utility=1 calls=6
+  dailylife user_task_4     utility=1 calls=8
+  dailylife user_task_6     utility=1 calls=10
+  dailylife user_task_8     utility=1 calls=8
+  github    user_task_0     utility=0 calls=9
+  github    user_task_10    utility=0 calls=8
+  github    user_task_12    utility=1 calls=10
+  github    user_task_14    utility=1 calls=6
+  github    user_task_16    utility=1 calls=4
+  github    user_task_18    utility=1 calls=7
+  github    user_task_2     utility=1 calls=4
+  github    user_task_4     utility=1 calls=7
+  github    user_task_6     utility=1 calls=4
+  github    user_task_8     utility=0 calls=10
+  shopping  user_task_0     utility=1 calls=7
+  shopping  user_task_10    utility=0 calls=11
+  shopping  user_task_12    utility=0 calls=7
+  shopping  user_task_14    utility=1 calls=13
+  shopping  user_task_16    utility=0 calls=16
+  shopping  user_task_18    utility=0 calls=11
+  shopping  user_task_2     utility=0 calls=6
+  shopping  user_task_4     utility=0 calls=8
+  shopping  user_task_6     utility=0 calls=10
+  shopping  user_task_8     utility=0 calls=5
+
+[screen] solvable 16/30 in 2157s
+wrote runs/agentdyn_screen.glm.shard0.json

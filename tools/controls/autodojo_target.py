@@ -4,7 +4,10 @@ optimization target of AutoDojo's adaptive attack (arXiv:2606.15057).
 
 AutoDojo's optimizer evaluates every candidate injection by running the target agent
 end-to-end inside AgentDojo's pipeline. Its `get_llm` was given a plugin seam
-(vendored fork `reference/autodojo`, branch xpia-integration):
+(vendored fork `reference/autodojo`, branch xpia-integration: upstream
+github.com/xhOwenMa/AutoDojo pinned at commit
+abbcbd8d59ea19115dc874eeb2cf294169ac5e0d, plus the 8-patch series shipped at
+reference/autodojo-patches/, applied on top with `git am`):
 
     --target-model "plugin:autodojo_target?model=openai/gpt-oss-20b&probe_dir=runs/gpt-oss-20b-userabl&direction=combo_ovr8_pat1&alpha=8.06&layers=12,16,20&match_sigma_to=dim_no_override&max_new=4096&name=gpt-oss-20b-countersteer"
 

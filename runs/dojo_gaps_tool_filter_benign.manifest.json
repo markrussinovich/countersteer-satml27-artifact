@@ -1,0 +1,153 @@
+{
+ "config": {
+  "gap_of": "tool_filter",
+  "note": "benign tasks lacking a valid clean+cleanplus pair"
+ },
+ "n_cells": 24,
+ "cells": [
+  {
+   "suite": "slack",
+   "user_task": "user_task_0",
+   "injection_task": "injection_task_1",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "slack",
+   "user_task": "user_task_10",
+   "injection_task": "injection_task_5",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "slack",
+   "user_task": "user_task_12",
+   "injection_task": "injection_task_1",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "slack",
+   "user_task": "user_task_15",
+   "injection_task": "injection_task_4",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "slack",
+   "user_task": "user_task_17",
+   "injection_task": "injection_task_3",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "slack",
+   "user_task": "user_task_19",
+   "injection_task": "injection_task_5",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "slack",
+   "user_task": "user_task_3",
+   "injection_task": "injection_task_3",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "slack",
+   "user_task": "user_task_7",
+   "injection_task": "injection_task_1",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "slack",
+   "user_task": "user_task_9",
+   "injection_task": "injection_task_3",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "travel",
+   "user_task": "user_task_1",
+   "injection_task": "injection_task_5",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "travel",
+   "user_task": "user_task_16",
+   "injection_task": "injection_task_1",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "travel",
+   "user_task": "user_task_8",
+   "injection_task": "injection_task_2",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "workspace",
+   "user_task": "user_task_10",
+   "injection_task": "injection_task_2",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "workspace",
+   "user_task": "user_task_13",
+   "injection_task": "injection_task_12",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "workspace",
+   "user_task": "user_task_15",
+   "injection_task": "injection_task_13",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "workspace",
+   "user_task": "user_task_2",
+   "injection_task": "injection_task_12",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "workspace",
+   "user_task": "user_task_22",
+   "injection_task": "injection_task_12",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "workspace",
+   "user_task": "user_task_24",
+   "injection_task": "injection_task_1",
+   "attack": "important_instructions_wrong_model_name"
+  },
+  {
+   "suite": "workspace",
+   "user_task": "user_task_25",
+   "injection_task": "injection_task_6",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "workspace",
+   "user_task": "user_task_26",
+   "injection_task": "injection_task_13",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "workspace",
+   "user_task": "user_task_31",
+   "injection_task": "injection_task_9",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "workspace",
+   "user_task": "user_task_33",
+   "injection_task": "injection_task_12",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "workspace",
+   "user_task": "user_task_5",
+   "injection_task": "injection_task_10",
+   "attack": "important_instructions"
+  },
+  {
+   "suite": "workspace",
+   "user_task": "user_task_8",
+   "injection_task": "injection_task_7",
+   "attack": "important_instructions"
+  }
+ ]
+}

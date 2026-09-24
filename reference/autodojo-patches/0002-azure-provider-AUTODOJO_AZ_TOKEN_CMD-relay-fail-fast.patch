@@ -1,0 +1,110 @@
+From 08c1bac07a6a6c201d3106f0d3aaf6003e9c9490 Mon Sep 17 00:00:00 2001
+From: Anonymized <anon@example.com>
+Date: Sat, 5 Sep 2026 18:31:08 +0000
+Subject: [PATCH 2/8] azure provider: AUTODOJO_AZ_TOKEN_CMD relay + fail-fast
+ on fresh-token 401 / exhausted retries
+
+The first smoke ran its whole defended arm on empty optimizer outputs: .9's az
+identity minted valid-looking tokens with no data-plane RBAC on the resource, every
+call 401'd, and the retry loop returned ''. Auth failures now abort; empty content
+logs finish_reason+usage.
+---
+ agentdojo/variant_generation/llm_utils.py | 48 ++++++++++++++++++++---
+ 1 file changed, 42 insertions(+), 6 deletions(-)
+
+diff --git a/agentdojo/variant_generation/llm_utils.py b/agentdojo/variant_generation/llm_utils.py
+index f7f1be5..95d1599 100644
+--- a/agentdojo/variant_generation/llm_utils.py
++++ b/agentdojo/variant_generation/llm_utils.py
+@@ -89,13 +89,27 @@ _AZ_CACHE: dict = {"path": None, "data": None, "seen": None}
+ 
+ 
+ def _azure_token(force: bool = False) -> str:
++    """Bearer token for the Azure endpoint, cached 40 min.
++
++    AUTODOJO_AZ_TOKEN_CMD overrides the default local `az account get-access-token`
++    with any shell command printing a token on stdout — needed on fleet boxes whose
++    own az login is a DIFFERENT identity without data-plane access to the resource
++    (measured: <FLEET_HOST_C> minted a valid-looking token that 401'd on every call). Typical
++    value: `ssh -n <user>@<box-with-access> az account get-access-token
++    --resource https://cognitiveservices.azure.com/ --query accessToken -o tsv`.
++    """
+     import subprocess
+     now = time.time()
+     if force or _AZ_TOKEN["value"] is None or now - _AZ_TOKEN["t"] > 2400:  # 40 min
+-        _AZ_TOKEN["value"] = subprocess.check_output(
+-            ["az", "account", "get-access-token", "--resource",
+-             "https://cognitiveservices.azure.com/", "--query", "accessToken", "-o", "tsv"],
+-            text=True).strip()
++        cmd = os.environ.get("AUTODOJO_AZ_TOKEN_CMD")
++        if cmd:
++            out = subprocess.check_output(cmd, shell=True, text=True)
++        else:
++            out = subprocess.check_output(
++                ["az", "account", "get-access-token", "--resource",
++                 "https://cognitiveservices.azure.com/", "--query", "accessToken",
++                 "-o", "tsv"], text=True)
++        _AZ_TOKEN["value"] = out.strip().splitlines()[-1]
+         _AZ_TOKEN["t"] = now
+     return _AZ_TOKEN["value"]
+ 
+@@ -170,12 +184,25 @@ def _generate_azure(
+             return hit
+ 
+     retries = 5
++    fresh_401 = 0
+     for attempt in range(retries):
+         try:
+             r = httpx.post(url, json=body, timeout=600.0, headers={
+                 "Authorization": f"Bearer {_azure_token()}",
+                 "Content-Type": "application/json"})
+-            if r.status_code == 401:  # token expired mid-run
++            if r.status_code == 401:
++                # One retry with a force-refreshed token covers mid-run expiry; a
++                # SECOND 401 on a fresh token is an authorization failure (wrong
++                # identity / no RBAC on the resource) and must ABORT the run, not
++                # silently degrade into empty optimizer outputs (that happened:
++                # the first smoke ran its whole defended arm on "" writer output).
++                fresh_401 += 1
++                if fresh_401 >= 2:
++                    raise RuntimeError(
++                        f"Azure 401 with a freshly-minted token: the calling "
++                        f"identity has no data-plane access to {url.split('/o')[0]}. "
++                        f"Set AUTODOJO_AZ_TOKEN_CMD to mint from a box that does. "
++                        f"Body: {r.text[:200]}")
+                 _azure_token(force=True)
+                 continue
+             if r.status_code in (429, 500, 502, 503):
+@@ -184,6 +211,10 @@ def _generate_azure(
+             r.raise_for_status()
+             resp = r.json()
+             content = (resp["choices"][0]["message"].get("content") or "").strip()
++            if not content:
++                fr = resp["choices"][0].get("finish_reason")
++                logger.warning(f"[azure] EMPTY content (finish_reason={fr}); "
++                               f"usage={resp.get('usage')}")
+             try:
+                 from agentdojo import cost_tracker as _ct
+                 _ct.record(type("R", (), {"usage": resp.get("usage") or {}})(),
+@@ -197,12 +228,17 @@ def _generate_azure(
+                                         "ts": time.time()}) + "\n")
+                 cache["data"].setdefault(key, {})[occ] = content
+             return content
++        except RuntimeError:
++            raise  # the fresh-401 authorization abort above; never swallowed
+         except Exception as e:
+             logger.error(f"Azure API error (attempt {attempt+1}/{retries}): {e}")
+             if attempt == retries - 1:
+                 raise
+             time.sleep(5 * (attempt + 1))
+-    return ""
++    # Exhausted retries without a response object to raise from (persistent
++    # 429/5xx). An empty return would run the optimizer on "" — abort instead.
++    raise RuntimeError(f"Azure call failed after {retries} attempts (persistent "
++                       f"throttle/5xx); refusing to return empty optimizer output")
+ 
+ 
+ def get_openai_client(provider: str = "openrouter") -> OpenAI:
+-- 
+2.34.1
+

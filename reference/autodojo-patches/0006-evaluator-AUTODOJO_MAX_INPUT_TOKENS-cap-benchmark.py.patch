@@ -1,0 +1,114 @@
+From 2d7128d7f197ba18613673d84f62a8681d8be5e3 Mon Sep 17 00:00:00 2001
+From: Anonymized <anon@example.com>
+Date: Mon, 7 Sep 2026 09:39:43 +0000
+Subject: [PATCH 6/8] evaluator: AUTODOJO_MAX_INPUT_TOKENS cap +
+ benchmark.py-verbatim ContextLengthExceededError semantics
+
+A slack channel-group episode deterministically OOMs eager attention at ~7.3k true
+tokens on an 80GB A100 (2x13.6 GiB attention buffer + 42 GiB model), killing the
+whole optimization group twice. The cap uses their own PipelineConfig knob (threaded
+into all three pipeline constructions incl. reachability, same cap = internal
+symmetry) and overflow is scored utility=False/security=False exactly as their
+benchmark.py does -- an episode outcome, not a crash.
+---
+ .../variant_generation/optimize_variants.py   | 35 ++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
+
+diff --git a/agentdojo/variant_generation/optimize_variants.py b/agentdojo/variant_generation/optimize_variants.py
+index f5131cd..3944a6a 100644
+--- a/agentdojo/variant_generation/optimize_variants.py
++++ b/agentdojo/variant_generation/optimize_variants.py
+@@ -65,7 +65,8 @@ from suite_gen_utils import (  # noqa: E402
+     extract_critical_literals,
+ )
+ 
+-from llm_utils import generate as llm_generate  # noqa: E402
++from llm_utils import generate as llm_generate
++from agentdojo.agent_pipeline.errors import ContextLengthExceededError  # noqa: E402
+ from agentdojo import cost_tracker  # noqa: E402
+ 
+ # ── Constants ─────────────────────────────────────────────────────────────────
+@@ -555,6 +556,18 @@ class DojoASREvaluator:
+         from agentdojo.task_suite.load_suites import get_suite
+         from agentdojo.agent_pipeline.agent_pipeline import AgentPipeline, PipelineConfig
+ 
++        # xpia integration: optional input-context cap (their own PipelineConfig knob;
++        # ToolsExecutionLoop raises ContextLengthExceededError at ~chars/4 tokens, and
++        # the evaluator scores it exactly as their benchmark.py does: an episode
++        # failure, not a crash). Added after a channel-group episode deterministically
++        # OOM'd eager attention at ~7.3k true tokens on an 80GB A100 (2026-09-07).
++        self._max_input_tokens = (int(os.environ["AUTODOJO_MAX_INPUT_TOKENS"])
++                                  if os.environ.get("AUTODOJO_MAX_INPUT_TOKENS") else None)
++        if self._max_input_tokens:
++            print(f"[DojoASREvaluator] max_input_tokens={self._max_input_tokens} "
++                  f"(AUTODOJO_MAX_INPUT_TOKENS; overflow scored as episode failure "
++                  f"per benchmark.py semantics)")
++
+         self.suite = get_suite("v1.2.2", suite_name)
+ 
+         defense_kwargs = {}
+@@ -590,6 +603,7 @@ class DojoASREvaluator:
+         self.pipeline = AgentPipeline.from_config(PipelineConfig(
+             llm=model, model_id=model_id, defense=defense, suite_name=suite_name,
+             system_message_name=None, system_message=None,
++            max_input_tokens=self._max_input_tokens,
+             filter_granularity=filter_granularity, **defense_kwargs,
+         ))
+         if defense is None:
+@@ -598,6 +612,7 @@ class DojoASREvaluator:
+             self.reachability_pipeline = AgentPipeline.from_config(PipelineConfig(
+                 llm=model, model_id=model_id, defense=None,
+                 system_message_name=None, system_message=None,
++                max_input_tokens=self._max_input_tokens,
+             ))
+         # ── xpia-steering integration ──────────────────────────────────────────
+         # When the defense lives INSIDE the target LLM element (a plugin target,
+@@ -613,6 +628,7 @@ class DojoASREvaluator:
+             self.reachability_pipeline = AgentPipeline.from_config(PipelineConfig(
+                 llm=reach_spec, model_id=model_id, defense=None,
+                 system_message_name=None, system_message=None,
++                max_input_tokens=self._max_input_tokens,
+             ))
+             print(f"[DojoASREvaluator] reachability pipeline overridden: "
+                   f"AUTODOJO_REACHABILITY_LLM={reach_spec}")
+@@ -722,6 +738,12 @@ class DojoASREvaluator:
+                 print(f"      [evaluate_asr] Skipping ({user_task_id}, {injection_task_id}) "
+                       f"due to JSONDecodeError from target model: {e}")
+                 utility, security = False, False
++            except ContextLengthExceededError as e:
++                # benchmark.py semantics verbatim: context overflow (max_input_tokens) is
++                # an episode failure, never a crash of the optimization group.
++                print(f"      [evaluate_asr] ({user_task_id}, {injection_task_id}) "
++                      f"context length exceeded: {e}")
++                utility, security = False, False
+             if security:
+                 successes += 1
+             details.append({
+@@ -798,6 +820,12 @@ class DojoASREvaluator:
+                 print(f"      [_run_with_trace_using] JSONDecodeError from target model "
+                       f"for ({user_task_id}, {injection_task_id}): {e}")
+                 messages = []
++            except ContextLengthExceededError as e:
++                # overflow during a trace probe: classify from what exists (benchmark.py
++                # scores the episode a failure; here only failure_class is consumed)
++                print(f"      [_run_with_trace_using] context length exceeded for "
++                      f"({user_task_id}, {injection_task_id}): {e}")
++                messages = []
+ 
+             model_output = model_output_from_messages(messages)
+             if model_output is not None:
+@@ -989,6 +1017,11 @@ class DojoASREvaluator:
+             print(f"      [_eval_single] Skipping ({user_task_id}, {injection_task_id}) "
+                   f"due to JSONDecodeError from target model: {e}")
+             utility, security = False, False
++        except ContextLengthExceededError as e:
++            # benchmark.py semantics: overflow = episode failure (see evaluate above)
++            print(f"      [_eval_single] ({user_task_id}, {injection_task_id}) "
++                  f"context length exceeded: {e}")
++            utility, security = False, False
+         return {
+             "user_task": user_task_id,
+             "injection_task": injection_task_id,
+-- 
+2.34.1
+

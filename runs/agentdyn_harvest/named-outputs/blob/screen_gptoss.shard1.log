@@ -1,0 +1,14 @@
+[transformers] MXFP4 quantization requires Triton: CUDA requires Triton >= 3.4.0, XPU/CPU requires Triton >= 3.5.0. Please install triton: `pip install triton`. We will default to dequantizing the model to bf16.
+Loading weights:   0%|          | 0/411 [00:00<?, ?it/s]Loading weights:   0%|          | 1/411 [00:00<01:26,  4.74it/s]Loading weights:   0%|          | 2/411 [00:00<01:53,  3.61it/s]Loading weights:   1%|          | 5/411 [00:00<01:01,  6.64it/s]Loading weights:   2%|▏         | 7/411 [00:01<00:58,  6.95it/s]Loading weights:   5%|▌         | 22/411 [00:01<00:15, 25.39it/s]Loading weights:   6%|▌         | 25/411 [00:01<00:19, 19.87it/s]Loading weights:   9%|▉         | 39/411 [00:01<00:11, 31.69it/s]Loading weights:  10%|█         | 43/411 [00:02<00:13, 27.35it/s]Loading weights:  14%|█▎        | 56/411 [00:02<00:08, 40.39it/s]Loading weights:  15%|█▍        | 61/411 [00:02<00:09, 36.51it/s]Loading weights:  18%|█▊        | 73/411 [00:02<00:08, 39.98it/s]Loading weights:  19%|█▉        | 78/411 [00:02<00:09, 34.80it/s]Loading weights:  22%|██▏       | 90/411 [00:03<00:08, 39.36it/s]Loading weights:  23%|██▎       | 95/411 [00:03<00:08, 36.70it/s]Loading weights:  26%|██▌       | 107/411 [00:03<00:06, 48.78it/s]Loading weights:  47%|████▋     | 192/411 [00:03<00:01, 198.75it/s]Loading weights:  67%|██████▋   | 277/411 [00:03<00:00, 333.11it/s]Loading weights:  78%|███████▊  | 322/411 [00:03<00:00, 359.20it/s]Loading weights:  89%|████████▉ | 367/411 [00:03<00:00, 341.25it/s]Loading weights: 100%|██████████| 411/411 [00:03<00:00, 103.77it/s]
+[screen] 8 of 60 user tasks (shard 1/8)
+  dailylife user_task_1     utility=1 calls=6
+  dailylife user_task_17    utility=1 calls=7
+  dailylife user_task_7     utility=1 calls=12
+  github    user_task_13    utility=0 calls=16
+  github    user_task_3     utility=1 calls=10
+  shopping  user_task_1     utility=1 calls=4
+  shopping  user_task_17    utility=0 calls=10
+  shopping  user_task_7     utility=0 calls=16
+
+[screen] solvable 5/8 in 409s
+wrote runs/agentdyn_screen.gptoss.shard1.json

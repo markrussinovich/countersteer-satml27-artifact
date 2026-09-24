@@ -1,0 +1,37 @@
+From a6803de8bcf6716db17f402655ecd403b1a28a21 Mon Sep 17 00:00:00 2001
+From: Anonymized <anon@example.com>
+Date: Sun, 6 Sep 2026 16:25:31 +0000
+Subject: [PATCH 5/8] azure provider: 400 (input content filter) is a blocked
+ CALL, not a fatal error
+
+Retrying a filtered input cannot succeed; raising voided the gpt-oss undefended
+dora_0 optimization group (2026-09-06 04:02, 2 cells lost). Empty output routes
+into the optimizer's existing parse-failure path: one lost step, logged.
+---
+ agentdojo/variant_generation/llm_utils.py | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/agentdojo/variant_generation/llm_utils.py b/agentdojo/variant_generation/llm_utils.py
+index 4f7c5ba..e302c5a 100644
+--- a/agentdojo/variant_generation/llm_utils.py
++++ b/agentdojo/variant_generation/llm_utils.py
+@@ -236,6 +236,16 @@ def _generate_azure(
+             if r.status_code in (429, 500, 502, 503):
+                 time.sleep(min(60, 5 * (attempt + 1)))
+                 continue
++            if r.status_code == 400:
++                # Azure returns 400 for an INPUT flagged by its content filter (the
++                # request body embeds attack text by design here). Retrying cannot
++                # succeed, and raising voided a whole optimization group (the
++                # gpt-oss undefended dora_0 group, 2026-09-06 04:02 -- 2 cells lost).
++                # Treat as a blocked call: empty output, logged; the optimizer's
++                # parse-failure path absorbs it as one lost step, not a lost group.
++                logger.warning(f"[azure] 400 (content filter / bad request) -- "
++                               f"returning empty output for this call: {r.text[:300]}")
++                return ""
+             r.raise_for_status()
+             resp = r.json()
+             content = (resp["choices"][0]["message"].get("content") or "").strip()
+-- 
+2.34.1
+

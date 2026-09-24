@@ -1,0 +1,19 @@
+{
+  "total_cost_usd": 0.0,
+  "total_calls": 15,
+  "total_prompt_tokens": 97904,
+  "total_completion_tokens": 9215,
+  "total_reasoning_tokens": 0,
+  "total_cached_tokens": 55552,
+  "by_role_model": {
+    "optimizer_llm|gpt-5.4": {
+      "calls": 15,
+      "cost": 0.0,
+      "prompt_tokens": 97904,
+      "completion_tokens": 9215,
+      "reasoning_tokens": 0,
+      "cached_tokens": 55552,
+      "no_usage": 15
+    }
+  }
+}

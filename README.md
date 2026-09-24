@@ -30,9 +30,9 @@ the canonical scorers, and fitted directions for the evaluated models.
 | `tools/bringup_stage1.sh` | one-command per-model bring-up: capture → factorial → fit → gates |
 | `configs/` | one JSON per model: the certified deployed cell (direction, dose, layers, sigma convention, budgets, firing corpora) for all five evaluated models |
 | `evaluate.sh` | one-command evaluation runner: `./evaluate.sh configs/<model>.json` (single-turn corpora + canonical scoring; `--agentic` for the AgentDojo battery) |
-| `runs/` | fitted probe/direction pickles for **all five models**, all evaluation corpora (webpage dev + held-out test, JSON parameter-abuse with its probe/dev/heldout/test splits and held-out attacker-template sets, LLMail replay set), CachePrune masks, the AgentDojo cell list, and the per-sample eval artifacts behind the reported tables (`achT_endtoend/`, `scrub_regrade/`, `general_utility_*.json`, `agri_probe_*.json`, `adaptive_sample_level_tests.json`, the GCG adaptive-attack runs `gcg_n52/` / `gcg_param/` / `gcg_param_rsn/`, the symmetrized test-split baselines `symtest/`, the AGRI-rival AgentDojo battery `agri_battery_r2/`, and the AutoDojo-vs-AGRI adaptive roots `autodojo/agri/` and `autodojo/agri_qwen/`) |
+| `runs/` | fitted probe/direction pickles for **all five models**, all evaluation corpora (webpage dev + held-out test, JSON parameter-abuse with its probe/dev/heldout/test splits and held-out attacker-template sets, LLMail replay set), CachePrune masks, the AgentDojo cell list, and the per-sample eval artifacts behind the reported tables (`achT_endtoend/`, `scrub_regrade/`, `general_utility_*.json`, `agri_probe_*.json`, `adaptive_sample_level_tests.json`, the GCG adaptive-attack runs `gcg_n52/` / `gcg_param/` / `gcg_param_rsn/`, the symmetrized test-split baselines `symtest/`, the AGRI-rival AgentDojo battery `agri_battery_r2/`, and the AutoDojo-vs-AGRI adaptive roots `autodojo/agri/` and `autodojo/agri_qwen/`); the full family-by-family map is the "Shipped run artifacts" table below |
 | `prereg/` | preregistrations written before their test touches: the framing-held-out refit's end-to-end certification (`ach_endtoend_prereg.json`) and the AutoDojo adaptive evaluation (`autodojo_prereg.json`) |
-| `reference/` | vendored third-party code: `reference/agri/` (the AGRI probe pipeline, arXiv:2608.02657, with our marked patches; `reference/DEVIATIONS.md` is the paper-vs-port deviations table). Other `reference/` checkouts (AgentDojo/AgentDyn/AutoDojo forks) are fetched separately at the commits pinned in the module docstrings |
+| `reference/` | vendored third-party code: `reference/agri/` (the AGRI probe pipeline, arXiv:2608.02657, with our marked patches; `reference/DEVIATIONS.md` is the paper-vs-port deviations table). Other `reference/` checkouts (AgentDyn, AutoDojo, ipi-arena, rc-paper) are fetched separately at the public commits pinned in the module docstrings; AutoDojo additionally needs the shipped patch series `reference/autodojo-patches/` (our plugin seam) applied with `git am` on the pinned upstream commit |
 
 ## Install
 
@@ -192,6 +192,41 @@ batteries are in the paper; the artifacts behind them ship under `runs/`.
   (`reference/agri/`) plus the paper's intervention spec; loads the spec JSONs under
   `runs/agri_probe_*.json`. `tools/controls/build_agri_probe.py` converts an AGRI
   probe checkpoint into that deployable spec. Port deviations: `reference/DEVIATIONS.md`.
+
+## Shipped run artifacts (`runs/`): the per-sample completions behind the paper's tables
+
+One line per measurement family; every file is the run's own per-sample output
+(result JSON beside its `_completions`/`.transcripts` siblings where the harness
+writes them). Paths mirror the provenance comments in the paper sources.
+
+| family (paths under `runs/`) | backs |
+|---|---|
+| `gpt-oss-20b-userabl/results_confirm_add-combo-ovr8-pat0-combo-ovr8-pat1-38723{77,78,79,80}*` | gpt-oss held-out test pass, 4 corpora (per-model detail + multi-model + flagship tables) |
+| `qwen3-30b-thinking/results_confirm_add-dim-no-override-both-{3310513,3310631,809909,810027}*` + dev `...-871922*` and 16σ dev `...-32339{22..25}*` | Qwen3-30B test rung + development counterparts |
+| `glm45-air/results_confirm_add-dim-no-override-actioncentred-1436291*` (T), `...-1220531*` (dev), `...-3599721*` (multi-turn boundary), `...-8815*` (screening diagnostics), `glm_dojo_full*` | GLM-4.5-Air certification + its AgentDojo grid |
+| `gemma4-31b-it/cert_harvest/` + `results_confirm_add-dim-no-override-both-{3489031,3532482}*`, `results_add-...-639808*` | Gemma-4 held-out certification, T* rung, prose-carrier null |
+| `llama31-8b/results_confirm_add-dim-no-override-achf-2373033*` + `llama31_agentdojo_run.shard{0..3}*` | Llama-3.1-8B certification + its AgentDojo grid |
+| `dojo_soa_gptoss/`, `dojo_soa_qwen/`, `dojo_soa_llama31/`, `dojo_filters_glm/` | Table I same-process 4-arm AgentDojo batteries + rival-defense arms |
+| `judge_utility/`, `soa_fidelity/` | pairwise-judge per-cell artifacts, judge validation controls, fidelity table |
+| `dojo_full_mn4096/`, `agentdojo_censor_rerun.json*` | gpt-oss AgentDojo certification grid (0.475 → 0.079) |
+| `dose_gptoss/` | gpt-oss AgentDojo dose curve (dose table + figure) |
+| `qwen_ad_a1{0,2,4}_def.shard*` / `qwen_ad_a1{0,2,4}_benign.json`, `qwen_agentdojo_run.shard*`, `dojo_baselines_qwen/` | Qwen AgentDojo dose curve + legacy baseline rows |
+| `agentdojo_secalign*`, `agentdojo_cacheprune.shard*`, `agentdojo_combo_v2.shard*` | SecAlign / CachePrune AgentDojo shards beside the deployed arm (768-budget) |
+| `agentdojo_run.shard{0..3}*`, `dojo_baselines/`, `dojo_baselines_mn4096/`, `dojo_gaps_*.manifest.json` | gpt-oss 768-budget four-arm run and inbuilt-defense baselines (legacy panels; delegated-authority partition table) |
+| `cacheprune/`, `gptoss20b-secalign-eval/`, `secalign_pairs.{train,eval}.jsonl` + `.stats.json` | single-turn baseline runs; SecAlign DPO training pairs (the checkpoint itself is not distributed) |
+| `agentdyn_harvest/`, `agentdyn_grid_qwen/`, `cluster_presync/xpia-agentdyn-qwen-ipi/`, `agentdyn_rivals/`, `dose_harvest/named-outputs/blob/`, `h100_delta_var/`, `agentdyn_cells*.json`, `agentdyn_screen_llama31.json`, `agentdyn_smoke_llama31.json` | AgentDyn 180-case grids (gpt-oss, Qwen, GLM), rival arms (PromptGuard/PIGuard/SecAlign/CachePrune), dose-frontier arm, fabric-variance replicates |
+| `autodojo/full2{,_capped}/` (per-arm `injections.json` + `run_cost.json`, prompt logs, LLM call caches), `autodojo/harvest2/merged/`, `autodojo/harvest4/merged/`, `autodojo/final_merge_score.txt`, fraud-label files | AutoDojo adaptive matrix (AD@6) and its audits; `harvest2/merged` is the signed-off canonical merge, `harvest4/merged` the final full pull |
+| `adaptive_framing.shard*`, `qwen_adaptive_framing.shard*`, `adaptive_param_{none,spotlight}.json`, `adaptive_param_cacheprune.shard*`, `secalign_adaptive_{param.shard*,tool}.json` | defense-aware adaptive query attacks (framing search, five-arm parameter-manipulation table) |
+| `whitebox_deployed/`, `gcg_harvest/named-outputs/blob/`, `qwen_adaptive_leg2b.*`, `qwen_adaptive_leg3.*` (beside the shipped `gcg_n52/`, `gcg_param/`, `gcg_param_rsn/`) | GCG white-box / surrogate arms and the Qwen adaptive legs |
+| `llmail_replay/` (gpt-oss dev+test shards), `llmail_qwen_scale/` | LLMail-Inject replay (0/2052 gpt-oss, 0/1537 Qwen) |
+| `relay_multiturn.shard{0..3}.json`, `gpt-oss-20b-userabl/results_add-combo-ovr8-pat1-30533{80..83}*` | relay-attack rung |
+| `gpt-oss-20b-userabl/results_add-combo-ovr8-pat1-scopeP4-*-62771{2,3}*` | search-budget appendix's deployed readings |
+
+Not shipped, with cause: the raw LLMail-Inject challenge dumps (public upstream
+dataset, >1.9 GB; the replay corpora `llmail_dataset.{dev,test}.json` and every
+replay output are shipped); the AutoDojo per-host harvest snapshots superseded
+by the deduplicated `merged/` views scored in `final_merge_score.txt`; and the
+`agri_battery_r2/` transcript siblings (noted above).
 
 ## Notes
 

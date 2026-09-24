@@ -1,0 +1,14 @@
+[transformers] MXFP4 quantization requires Triton: CUDA requires Triton >= 3.4.0, XPU/CPU requires Triton >= 3.5.0. Please install triton: `pip install triton`. We will default to dequantizing the model to bf16.
+Loading weights:   0%|          | 0/411 [00:00<?, ?it/s]Loading weights:   0%|          | 1/411 [00:00<01:19,  5.19it/s]Loading weights:   0%|          | 2/411 [00:00<01:24,  4.86it/s]Loading weights:   1%|          | 5/411 [00:00<00:44,  9.06it/s]Loading weights:   2%|▏         | 7/411 [00:00<00:44,  9.06it/s]Loading weights:   5%|▌         | 22/411 [00:01<00:12, 32.28it/s]Loading weights:   6%|▋         | 26/411 [00:01<00:13, 28.95it/s]Loading weights:   9%|▉         | 39/411 [00:01<00:09, 37.31it/s]Loading weights:  10%|█         | 43/411 [00:01<00:12, 30.34it/s]Loading weights:  14%|█▎        | 56/411 [00:01<00:08, 40.98it/s]Loading weights:  15%|█▍        | 61/411 [00:02<00:09, 35.00it/s]Loading weights:  18%|█▊        | 73/411 [00:02<00:08, 42.12it/s]Loading weights:  19%|█▉        | 78/411 [00:02<00:09, 34.10it/s]Loading weights:  22%|██▏       | 90/411 [00:02<00:07, 41.41it/s]Loading weights:  43%|████▎     | 175/411 [00:02<00:01, 172.23it/s]Loading weights:  63%|██████▎   | 260/411 [00:03<00:00, 297.52it/s]Loading weights:  80%|████████  | 330/411 [00:03<00:00, 379.65it/s]Loading weights:  97%|█████████▋| 398/411 [00:03<00:00, 431.19it/s]Loading weights: 100%|██████████| 411/411 [00:03<00:00, 127.37it/s]
+[screen] 8 of 60 user tasks (shard 0/8)
+  dailylife user_task_0     utility=1 calls=8
+  dailylife user_task_16    utility=1 calls=8
+  dailylife user_task_6     utility=1 calls=10
+  github    user_task_12    utility=1 calls=13
+  github    user_task_2     utility=1 calls=4
+  shopping  user_task_0     utility=1 calls=8
+  shopping  user_task_16    utility=0 calls=15
+  shopping  user_task_6     utility=0 calls=9
+
+[screen] solvable 6/8 in 337s
+wrote runs/agentdyn_screen.gptoss.shard0.json

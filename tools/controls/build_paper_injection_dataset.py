@@ -2,7 +2,9 @@
 
 WHY. Every corpus the defense has been evaluated on delivers the injection inside a JSON
 field of a tool payload. The role-confusion paper's agent experiment
-(reference/rc-paper/experiments/agent-injections/) injects into NATURAL HTML DOCUMENT TEXT
+(reference/rc-paper/experiments/agent-injections/; the rc-paper checkout is
+github.com/role-confusion/prompt-injection-as-role-confusion pinned at commit
+ec333c40fd43fe991e1ebf66765051b6d7e35784) injects into NATURAL HTML DOCUMENT TEXT
 -- Wikipedia pages, the templated injection spliced before </body> -- which is exactly the
 medium where our correlational replication inverted (prose-vs-JSON confound, FINDINGS 6).
 The paper ships the RECIPE, not the data (notebook outputs stripped, artifacts gitignored),

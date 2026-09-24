@@ -6,7 +6,8 @@
 # AgentDojo's own security checker. The target agent is OUR SteeredLLM bridge element
 # (the same substrate as every recorded AgentDojo number), reached through the
 # `plugin:` seam added to the vendored fork (reference/autodojo, branch
-# xpia-integration).
+# xpia-integration = github.com/xhOwenMa/AutoDojo pinned at commit abbcbd8d59ea
+# + the patch series in reference/autodojo-patches/, applied with `git am`).
 #
 # Arms:
 #   --arm undefended   direction off; the adaptive anchor

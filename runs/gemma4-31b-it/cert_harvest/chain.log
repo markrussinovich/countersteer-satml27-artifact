@@ -1,0 +1,5 @@
+[chain] confirm_param_heldout_a8 rc=0
+[chain] confirm_disjoint_heldout_a8 rc=0
+[chain] confirm_param_heldout_a6 rc=0
+[chain] confirm_disjoint_heldout_a6 rc=0
+[chain] confirm_param_TSTARREPLICA_a8_n6 rc=0

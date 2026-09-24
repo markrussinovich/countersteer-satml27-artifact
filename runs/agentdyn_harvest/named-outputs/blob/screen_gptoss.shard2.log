@@ -1,0 +1,14 @@
+[transformers] MXFP4 quantization requires Triton: CUDA requires Triton >= 3.4.0, XPU/CPU requires Triton >= 3.5.0. Please install triton: `pip install triton`. We will default to dequantizing the model to bf16.
+Loading weights:   0%|          | 0/411 [00:00<?, ?it/s]Loading weights:   0%|          | 1/411 [00:00<01:27,  4.66it/s]Loading weights:   0%|          | 2/411 [00:00<01:29,  4.56it/s]Loading weights:   1%|          | 5/411 [00:00<00:47,  8.51it/s]Loading weights:   2%|▏         | 7/411 [00:00<00:42,  9.42it/s]Loading weights:   5%|▌         | 22/411 [00:01<00:11, 32.46it/s]Loading weights:   6%|▋         | 26/411 [00:01<00:12, 29.75it/s]Loading weights:   9%|▉         | 39/411 [00:01<00:08, 45.53it/s]Loading weights:  11%|█         | 44/411 [00:01<00:10, 33.88it/s]Loading weights:  14%|█▎        | 56/411 [00:01<00:08, 41.08it/s]Loading weights:  15%|█▍        | 61/411 [00:01<00:08, 41.66it/s]Loading weights:  18%|█▊        | 73/411 [00:02<00:07, 48.01it/s]Loading weights:  19%|█▉        | 78/411 [00:02<00:08, 40.14it/s]Loading weights:  22%|██▏       | 90/411 [00:02<00:06, 47.85it/s]Loading weights:  23%|██▎       | 95/411 [00:02<00:08, 38.42it/s]Loading weights:  34%|███▍      | 141/411 [00:02<00:02, 111.87it/s]Loading weights:  55%|█████▍    | 226/411 [00:02<00:00, 256.91it/s]Loading weights:  76%|███████▌  | 311/411 [00:03<00:00, 382.39it/s]Loading weights:  92%|█████████▏| 378/411 [00:03<00:00, 450.53it/s]Loading weights: 100%|██████████| 411/411 [00:03<00:00, 125.85it/s]
+[screen] 8 of 60 user tasks (shard 2/8)
+  dailylife user_task_10    utility=0 calls=16
+  dailylife user_task_18    utility=0 calls=10
+  dailylife user_task_8     utility=1 calls=9
+  github    user_task_14    utility=0 calls=4
+  github    user_task_4     utility=1 calls=6
+  shopping  user_task_10    utility=1 calls=11
+  shopping  user_task_18    utility=0 calls=1
+  shopping  user_task_8     utility=0 calls=16
+
+[screen] solvable 3/8 in 661s
+wrote runs/agentdyn_screen.gptoss.shard2.json

@@ -1,0 +1,37 @@
+[benign-only] 56 unique user tasks from 180 cells
+[run] 28 of 56 cells across 28 task groups (shard 1/2)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] MXFP4 quantization requires Triton: CUDA requires Triton >= 3.4.0, XPU/CPU requires Triton >= 3.5.0. Please install triton: `pip install triton`. We will default to dequantizing the model to bf16.
+Loading weights:   0%|          | 0/411 [00:00<?, ?it/s]Loading weights:   0%|          | 1/411 [00:00<01:13,  5.60it/s]Loading weights:   0%|          | 2/411 [00:00<01:20,  5.07it/s]Loading weights:   1%|          | 5/411 [00:00<00:39, 10.25it/s]Loading weights:   2%|▏         | 7/411 [00:00<00:41,  9.63it/s]Loading weights:   5%|▌         | 22/411 [00:00<00:09, 38.98it/s]Loading weights:   7%|▋         | 28/411 [00:01<00:09, 39.19it/s]Loading weights:   9%|▉         | 39/411 [00:01<00:07, 47.58it/s]Loading weights:  13%|█▎        | 54/411 [00:01<00:05, 70.01it/s]Loading weights:  15%|█▌        | 63/411 [00:01<00:07, 44.70it/s]Loading weights:  18%|█▊        | 73/411 [00:01<00:07, 42.84it/s]Loading weights:  19%|█▉        | 79/411 [00:02<00:07, 44.05it/s]Loading weights:  22%|██▏       | 90/411 [00:02<00:06, 50.40it/s]Loading weights:  23%|██▎       | 96/411 [00:02<00:07, 44.98it/s]Loading weights:  26%|██▌       | 107/411 [00:02<00:05, 52.59it/s]Loading weights:  43%|████▎     | 177/411 [00:02<00:01, 180.98it/s]Loading weights:  64%|██████▎   | 262/411 [00:02<00:00, 325.30it/s]Loading weights:  84%|████████▍ | 347/411 [00:02<00:00, 444.90it/s]Loading weights: 100%|██████████| 411/411 [00:02<00:00, 139.17it/s]
+/scratch/azureml/cr/j/d2fc68763ba54817a611309052477b59/exe/wd/.venv/lib/python3.12/site-packages/agentdojo/agent_pipeline/basic_elements.py:22: UserWarning: The query is not being added as the first message or after the system message
+  warnings.warn("The query is not being added as the first message or after the system message")
+  [1/28] banking/user_task_10/injection_task_1 important_instructions       atk sec=None def sec=None | 46s eta 1250s
+  [2/28] banking/user_task_13/injection_task_0 important_instructions       atk sec=None def sec=None | 130s eta 1690s
+  [3/28] banking/user_task_2/injection_task_2 important_instructions       atk sec=None def sec=None | 197s eta 1645s
+  [4/28] banking/user_task_5/injection_task_0 important_instructions       atk sec=None def sec=None | 241s eta 1444s
+  [5/28] banking/user_task_8/injection_task_1 important_instructions       atk sec=None def sec=None | 273s eta 1256s
+  [6/28] slack/user_task_1/injection_task_5 important_instructions       atk sec=None def sec=None | 393s eta 1439s
+  [7/28] slack/user_task_11/injection_task_4 important_instructions       atk sec=None def sec=None | 520s eta 1559s
+  [8/28] slack/user_task_13/injection_task_5 important_instructions       atk sec=None def sec=None | 587s eta 1468s
+  [9/28] slack/user_task_16/injection_task_1 important_instructions       atk sec=None def sec=None | 607s eta 1282s
+  [10/28] slack/user_task_18/injection_task_4 important_instructions       atk sec=None def sec=None | 703s eta 1265s
+  [11/28] slack/user_task_2/injection_task_4 important_instructions_no_na atk sec=None def sec=None | 719s eta 1112s
+  [12/28] slack/user_task_6/injection_task_1 important_instructions       atk sec=None def sec=None | 763s eta 1017s
+  [13/28] slack/user_task_8/injection_task_2 important_instructions       atk sec=None def sec=None | 831s eta 959s
+  [14/28] travel/user_task_0/injection_task_2 important_instructions       atk sec=None def sec=None | 848s eta 848s
+  [15/28] travel/user_task_10/injection_task_2 important_instructions       atk sec=None def sec=None | 906s eta 785s
+  [16/28] travel/user_task_4/injection_task_3 important_instructions       atk sec=None def sec=None | 977s eta 733s
+  [17/28] travel/user_task_9/injection_task_6 important_instructions       atk sec=None def sec=None | 1037s eta 671s
+  [18/28] workspace/user_task_12/injection_task_0 important_instructions_no_na atk sec=None def sec=None | 1096s eta 609s
+  [19/28] workspace/user_task_14/injection_task_0 important_instructions       atk sec=None def sec=None | 1112s eta 527s
+  [20/28] workspace/user_task_18/injection_task_5 important_instructions_no_us atk sec=None def sec=None | 1143s eta 457s
+  [21/28] workspace/user_task_21/injection_task_13 important_instructions       atk sec=None def sec=None | 1220s eta 407s
+  [22/28] workspace/user_task_23/injection_task_5 important_instructions       atk sec=None def sec=None | 1288s eta 351s
+  [23/28] workspace/user_task_25/injection_task_6 important_instructions       atk sec=None def sec=None | 1313s eta 285s
+  [24/28] workspace/user_task_29/injection_task_3 important_instructions       atk sec=None def sec=None | 1372s eta 229s
+  [25/28] workspace/user_task_32/injection_task_12 important_instructions       atk sec=None def sec=None | 1423s eta 171s
+  [26/28] workspace/user_task_37/injection_task_11 important_instructions       atk sec=None def sec=None | 1486s eta 114s
+  [27/28] workspace/user_task_7/injection_task_5 important_instructions_wrong atk sec=None def sec=None | 1504s eta 56s
+  [28/28] workspace/user_task_9/injection_task_7 important_instructions       atk sec=None def sec=None | 1538s eta 0s
+
+wrote outputs/dojo_repeat_user_prompt_benign.shard1.json (28 cells, 1540s)

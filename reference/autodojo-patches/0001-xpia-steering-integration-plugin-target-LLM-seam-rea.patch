@@ -1,0 +1,272 @@
+From 8099d051e9708b1ccb4eeb87df84400dc616ff31 Mon Sep 17 00:00:00 2001
+From: Anonymized <anon@example.com>
+Date: Sat, 5 Sep 2026 18:14:26 +0000
+Subject: [PATCH 1/8] xpia-steering integration: plugin target-LLM seam,
+ reachability override, Azure optimizer provider + call cache
+
+- get_llm: 'plugin:<module>?k=v' resolves to module.make_llm(spec) -> BasePipelineElement
+  (defense-inside-the-LLM targets, e.g. activation steering, which the register_defense
+  filter seam cannot express)
+- optimize_variants: plugin specs require --target-model-id for the cache path;
+  AUTODOJO_REACHABILITY_LLM builds the reachability pipeline from a second (undefended)
+  spec, per the evaluator's own reachability-must-be-undefended design
+- llm_utils: provider 'azure' (XPIA_JUDGE_ENDPOINT + az-cli AAD bearer, 40-min refresh,
+  gpt-5*: max_completion_tokens + temperature omitted), usage into cost_tracker,
+  occurrence-indexed on-disk call cache (AUTODOJO_LLM_CACHE)
+
+Upstream pinned at abbcbd8d59ea19115dc874eeb2cf294169ac5e0d.
+---
+ .../agent_pipeline/agent_pipeline.py          |  18 +-
+ agentdojo/variant_generation/llm_utils.py     | 154 +++++++++++++++++-
+ .../variant_generation/optimize_variants.py   |  24 +++
+ 3 files changed, 194 insertions(+), 2 deletions(-)
+
+diff --git a/agentdojo/src/agentdojo/agent_pipeline/agent_pipeline.py b/agentdojo/src/agentdojo/agent_pipeline/agent_pipeline.py
+index 927a956..c2fd466 100644
+--- a/agentdojo/src/agentdojo/agent_pipeline/agent_pipeline.py
++++ b/agentdojo/src/agentdojo/agent_pipeline/agent_pipeline.py
+@@ -134,7 +134,23 @@ def _get_local_model_id(port) -> str:
+ 
+ 
+ def get_llm(model: str) -> BasePipelineElement:
+-    if model.lower() == "vllm_parsed":
++    if model.startswith("plugin:"):
++        # ── xpia-steering integration (external target-LLM plugin) ────────────
++        # "plugin:<module>?k=v&..." resolves to a module exposing
++        # `make_llm(spec: str) -> BasePipelineElement`. This is the substitution
++        # point for a locally-hosted target agent whose defense lives INSIDE the
++        # LLM element (e.g. activation steering applied during generation), which
++        # cannot be expressed as a tool-output filter via `register_defense`.
++        # The plugin element must set `.name` (used for run paths / the
++        # important-instructions wrapper model name).
++        import importlib
++
++        mod_name = model.split(":", 1)[1].split("?", 1)[0]
++        module = importlib.import_module(mod_name)
++        llm = module.make_llm(model)
++        if getattr(llm, "name", None) is None:
++            raise ValueError(f"plugin LLM from {mod_name} must set .name")
++    elif model.lower() == "vllm_parsed":
+         # Local vLLM server via OpenAI-compatible API
+         port = os.getenv("LOCAL_LLM_PORT", 8000)
+         client = openai.OpenAI(
+diff --git a/agentdojo/variant_generation/llm_utils.py b/agentdojo/variant_generation/llm_utils.py
+index 7e88aed..f7f1be5 100644
+--- a/agentdojo/variant_generation/llm_utils.py
++++ b/agentdojo/variant_generation/llm_utils.py
+@@ -59,9 +59,152 @@ PROVIDERS = {
+         "api_key_env": "GEMINI_API_KEY",
+         "client_type": "google",
+     },
++    # xpia-steering integration: Azure OpenAI deployment reached with an az-cli
++    # AAD bearer token (no API key). Endpoint from XPIA_JUDGE_ENDPOINT (the repo's
++    # existing judge transport convention); model_name = the deployment id.
++    "azure": {
++        "base_url": None,
++        "api_key_env": None,
++        "client_type": "azure",
++    },
+ }
+ 
+ 
++# ─── Azure OpenAI via az-cli bearer (xpia-steering integration) ───
++#
++# Deviations from _generate_openai, all forced by gpt-5.x deployments and all logged
++# once per run: `max_tokens` -> `max_completion_tokens`; `temperature` omitted for
++# gpt-5* deployments (they reject any non-default value — the analyzer's 0.3 runs at
++# the served default of 1.0). Usage is recorded into agentdojo.cost_tracker (token
++# counts; priced at zero, matching its non-OpenRouter policy).
++#
++# Optional on-disk call cache: set AUTODOJO_LLM_CACHE to a JSONL path. Keyed by
++# sha256(deployment|system|prompt|temperature) PLUS a per-run occurrence index, so a
++# deliberate re-sample of an identical prompt (the optimizer retries after a parse
++# failure with an unchanged leaderboard) still reaches the API instead of replaying
++# the same failed output forever; a resumed/re-run pass replays deterministically.
++
++_AZ_TOKEN: dict = {"value": None, "t": 0.0}
++_AZ_CACHE: dict = {"path": None, "data": None, "seen": None}
++
++
++def _azure_token(force: bool = False) -> str:
++    import subprocess
++    now = time.time()
++    if force or _AZ_TOKEN["value"] is None or now - _AZ_TOKEN["t"] > 2400:  # 40 min
++        _AZ_TOKEN["value"] = subprocess.check_output(
++            ["az", "account", "get-access-token", "--resource",
++             "https://cognitiveservices.azure.com/", "--query", "accessToken", "-o", "tsv"],
++            text=True).strip()
++        _AZ_TOKEN["t"] = now
++    return _AZ_TOKEN["value"]
++
++
++def _azure_cache_load():
++    import json
++    path = os.environ.get("AUTODOJO_LLM_CACHE")
++    if not path:
++        return None
++    if _AZ_CACHE["path"] != path:
++        data: dict = {}
++        if os.path.exists(path):
++            with open(path) as f:
++                for line in f:
++                    try:
++                        rec = json.loads(line)
++                    except json.JSONDecodeError:
++                        continue  # torn tail line from a killed run
++                    data.setdefault(rec["key"], {})[rec["i"]] = rec["output"]
++        _AZ_CACHE.update(path=path, data=data, seen={})
++    return _AZ_CACHE
++
++
++def _generate_azure(
++    prompt: str,
++    model_name: str,
++    system_prompt: Optional[str] = None,
++    temperature: float = 0.7,
++    max_tokens: int = 4096,
++    **kwargs,
++) -> str:
++    import hashlib
++    import json
++
++    import httpx
++
++    endpoint = os.environ.get("XPIA_JUDGE_ENDPOINT", "")
++    if not endpoint:
++        raise RuntimeError("provider=azure needs XPIA_JUDGE_ENDPOINT "
++                           "(https://<resource>.cognitiveservices.azure.com)")
++    api_version = os.environ.get("XPIA_JUDGE_API_VERSION", "2024-10-21")
++    url = (f"{endpoint}/openai/deployments/{model_name}"
++           f"/chat/completions?api-version={api_version}")
++
++    is_gpt5 = model_name.startswith("gpt-5")
++    body: dict = {"messages": ([{"role": "system", "content": system_prompt}]
++                               if system_prompt else [])
++                  + [{"role": "user", "content": prompt if prompt else "[BLOCKED]"}]}
++    if is_gpt5:
++        body["max_completion_tokens"] = int(
++            os.environ.get("AUTODOJO_AZURE_MAX_COMPLETION", "16384"))
++        if "azure-temp-deviation" not in _AZ_TOKEN:
++            _AZ_TOKEN["azure-temp-deviation"] = True
++            logger.info(f"[azure] gpt-5* deployment: temperature omitted "
++                        f"(requested {temperature}), max_completion_tokens="
++                        f"{body['max_completion_tokens']}")
++    else:
++        body["max_tokens"] = max_tokens
++        body["temperature"] = temperature
++
++    # cache lookup (occurrence-indexed)
++    cache = _azure_cache_load()
++    key = occ = None
++    if cache is not None:
++        key = hashlib.sha256(
++            f"{model_name}|{system_prompt or ''}|{prompt}|{temperature}".encode()
++        ).hexdigest()[:24]
++        occ = cache["seen"].get(key, 0)
++        cache["seen"][key] = occ + 1
++        hit = cache["data"].get(key, {}).get(occ)
++        if hit is not None:
++            return hit
++
++    retries = 5
++    for attempt in range(retries):
++        try:
++            r = httpx.post(url, json=body, timeout=600.0, headers={
++                "Authorization": f"Bearer {_azure_token()}",
++                "Content-Type": "application/json"})
++            if r.status_code == 401:  # token expired mid-run
++                _azure_token(force=True)
++                continue
++            if r.status_code in (429, 500, 502, 503):
++                time.sleep(min(60, 5 * (attempt + 1)))
++                continue
++            r.raise_for_status()
++            resp = r.json()
++            content = (resp["choices"][0]["message"].get("content") or "").strip()
++            try:
++                from agentdojo import cost_tracker as _ct
++                _ct.record(type("R", (), {"usage": resp.get("usage") or {}})(),
++                           model_name, role="optimizer_llm")
++            except Exception:
++                pass
++            if cache is not None and content:
++                with open(cache["path"], "a") as f:
++                    f.write(json.dumps({"key": key, "i": occ, "output": content,
++                                        "usage": resp.get("usage"),
++                                        "ts": time.time()}) + "\n")
++                cache["data"].setdefault(key, {})[occ] = content
++            return content
++        except Exception as e:
++            logger.error(f"Azure API error (attempt {attempt+1}/{retries}): {e}")
++            if attempt == retries - 1:
++                raise
++            time.sleep(5 * (attempt + 1))
++    return ""
++
++
+ def get_openai_client(provider: str = "openrouter") -> OpenAI:
+     """
+     Creates an OpenAI-compatible client for the given provider.
+@@ -403,7 +546,16 @@ def generate(
+     
+     client_type = PROVIDERS[provider]["client_type"]
+     
+-    if client_type == "google":
++    if client_type == "azure":
++        return _generate_azure(
++            prompt=prompt,
++            model_name=model_name,
++            system_prompt=system_prompt,
++            temperature=temperature,
++            max_tokens=max_tokens,
++            **kwargs,
++        )
++    elif client_type == "google":
+         return _generate_google(
+             prompt=prompt,
+             model_name=model_name,
+diff --git a/agentdojo/variant_generation/optimize_variants.py b/agentdojo/variant_generation/optimize_variants.py
+index 44e23f7..a3638ae 100644
+--- a/agentdojo/variant_generation/optimize_variants.py
++++ b/agentdojo/variant_generation/optimize_variants.py
+@@ -585,6 +585,23 @@ class DojoASREvaluator:
+                 llm=model, model_id=model_id, defense=None,
+                 system_message_name=None, system_message=None,
+             ))
++        # ── xpia-steering integration ──────────────────────────────────────────
++        # When the defense lives INSIDE the target LLM element (a plugin target,
++        # e.g. activation steering during generation), `defense=None` above makes
++        # the reachability pipeline share the DEFENDED element — but this class's
++        # own design note says reachability must run undefended ("defenses can
++        # rewrite tool outputs and skew the trace"; a steered agent can likewise
++        # change which vectors it reads). AUTODOJO_REACHABILITY_LLM names a second
++        # llm spec (typically the same plugin with the defense off) to build the
++        # reachability pipeline from instead.
++        reach_spec = os.environ.get("AUTODOJO_REACHABILITY_LLM")
++        if reach_spec:
++            self.reachability_pipeline = AgentPipeline.from_config(PipelineConfig(
++                llm=reach_spec, model_id=model_id, defense=None,
++                system_message_name=None, system_message=None,
++            ))
++            print(f"[DojoASREvaluator] reachability pipeline overridden: "
++                  f"AUTODOJO_REACHABILITY_LLM={reach_spec}")
+         print(f"[DojoASREvaluator] suite={suite_name}, model={model}, "
+               f"model_id={model_id}, defense={defense}, "
+               f"reachability_pipeline={'shared' if defense is None else 'no-defense (separate)'}"
+@@ -1405,6 +1422,13 @@ def main() -> None:
+             args.target_model_id if (args.target_model == "vllm_parsed" and args.target_model_id)
+             else args.target_model
+         )
++        # xpia-steering integration: a "plugin:<module>?k=v" target spec is not a
++        # usable path segment; require the explicit id instead (fail fast).
++        if args.target_model.startswith("plugin:"):
++            if not args.target_model_id:
++                raise ValueError("--target-model plugin:... requires --target-model-id "
++                                 "(used for the variants cache path)")
++            model_name = args.target_model_id
+         defense_name = args.defense or "no_defense"
+         cache_dir = OUTPUT_CACHE_DIR / suite_name / model_name / defense_name
+         cache_dir.mkdir(parents=True, exist_ok=True)
+-- 
+2.34.1
+

@@ -1,0 +1,8 @@
+[screen] 37/60 tasks solvable on the clean arm
+    dailylife   18 solvable
+    github      11 solvable
+    shopping     8 solvable
+
+[only] 351 cells with important_instructions
+
+TOTAL 351 cells -> runs/agentdyn_cells.gptoss.json
