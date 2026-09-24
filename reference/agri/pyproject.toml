@@ -29,7 +29,7 @@ vllm = [
     "accelerate>=1.0",
     "torch>=2.5",
     "transformers>=4.45",
-    "vllm==0.19.0",
+    "vllm==0.28.0",
 ]
 dev = [
     "agentdojo>=0.1.35",
