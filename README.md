@@ -30,7 +30,7 @@ the canonical scorers, and fitted directions for the evaluated models.
 | `tools/bringup_stage1.sh` | one-command per-model bring-up: capture → factorial → fit → gates |
 | `configs/` | one JSON per model: the certified deployed cell (direction, dose, layers, sigma convention, budgets, firing corpora) for all five evaluated models |
 | `evaluate.sh` | one-command evaluation runner: `./evaluate.sh configs/<model>.json` (single-turn corpora + canonical scoring; `--agentic` for the AgentDojo battery) |
-| `runs/` | fitted probe/direction pickles for **all five models**, all evaluation corpora (webpage dev + held-out test, JSON parameter-abuse with held-out attacker-template sets, LLMail replay set), CachePrune masks, the AgentDojo cell list, and the per-sample eval artifacts behind the reported tables (`achT_endtoend/`, `scrub_regrade/`, `general_utility_*.json`, `agri_probe_*.json`, `adaptive_sample_level_tests.json`) |
+| `runs/` | fitted probe/direction pickles for **all five models**, all evaluation corpora (webpage dev + held-out test, JSON parameter-abuse with its probe/dev/heldout/test splits and held-out attacker-template sets, LLMail replay set), CachePrune masks, the AgentDojo cell list, and the per-sample eval artifacts behind the reported tables (`achT_endtoend/`, `scrub_regrade/`, `general_utility_*.json`, `agri_probe_*.json`, `adaptive_sample_level_tests.json`, the GCG adaptive-attack runs `gcg_n52/` / `gcg_param/` / `gcg_param_rsn/`, the symmetrized test-split baselines `symtest/`, the AGRI-rival AgentDojo battery `agri_battery_r2/`, and the AutoDojo-vs-AGRI adaptive roots `autodojo/agri/` and `autodojo/agri_qwen/`) |
 | `prereg/` | preregistrations written before their test touches: the framing-held-out refit's end-to-end certification (`ach_endtoend_prereg.json`) and the AutoDojo adaptive evaluation (`autodojo_prereg.json`) |
 | `reference/` | vendored third-party code: `reference/agri/` (the AGRI probe pipeline, arXiv:2608.02657, with our marked patches; `reference/DEVIATIONS.md` is the paper-vs-port deviations table). Other `reference/` checkouts (AgentDojo/AgentDyn/AutoDojo forks) are fetched separately at the commits pinned in the module docstrings |
 
@@ -146,6 +146,21 @@ batteries are in the paper; the artifacts behind them ship under `runs/`.
   the adaptive query search (attempts nest within samples, so attempt-level tests are
   anti-conservative): exact sign-flip permutation test on paired per-sample means plus
   a paired bootstrap CI. Artifact: `runs/adaptive_sample_level_tests.json`.
+- `tools/controls/adaptive_gcg.py` — GCG adaptive-attack harness against the steering
+  defense (white-box / surrogate-transfer / surrogate-defense-transfer arms;
+  `--dataset param_abuse` teacher-forces the param-hijack tier-1 event, and
+  `--objective reasoned` scores the CE at the reasoned-call offset every real compromise
+  uses). Artifacts: `runs/gcg_n52/` (webpage corpus, n=52), `runs/gcg_param/` (param
+  class, forced offset), `runs/gcg_param_rsn/` (param class, reasoned offset).
+  `runs/gcg_param_rsn/seam_replay/` is a disclosure sidecar: a fresh-process static-arm
+  replay (script + 4 outputs) showing the two param-run static arms differ only by
+  process-history numerics.
+- `runs/symtest/` — test-split baseline symmetrization: CachePrune and the add-combo
+  deployed cell re-run on the held-out test split in the same process as their own
+  undefended anchors (result + full-completions files per job).
+- `runs/agri_battery_r2/` — the AGRI rival arm's AgentDojo battery (gpt-oss-20b and
+  Qwen3-30B, 8 shards each, JSON + progress logs; scored by AgentDojo's own checkers).
+  Transcript siblings are not shipped for this battery.
 - `tools/controls/agri_gate.py` — the AGRI rival arm (arXiv:2608.02657): probe-gated
   anti-injection reasoning prefill, implemented from their released probe pipeline
   (`reference/agri/`) plus the paper's intervention spec; loads the spec JSONs under
