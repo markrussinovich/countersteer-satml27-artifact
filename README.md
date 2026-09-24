@@ -81,6 +81,32 @@ must both reduce attack success at +α and increase it at −α). Dose search
 then locates a capability-safe deployment window; a dose only counts if the
 no-action capability guard stays intact.
 
+**Reproducing the shipped Llama-3.1-8B direction exactly** (the deployed
+`dim_no_override_achf` vector uses the FULL factorial design with
+action-centring and the `firm` override level excluded, which
+`bringup_stage1.sh`'s default `_both`-on-`locked24` path does not):
+
+```bash
+M=meta-llama/Llama-3.1-8B-Instruct; RUN=runs/llama31-8b-refit; TAG=llama31-8b-refit-full
+python xpia_defense.py --model $M --stage probe    --outdir $RUN --skip-ovr
+python xpia_defense.py --model $M --stage validate --outdir $RUN --skip-ovr
+# behavioral factorial on the SHIPPED probe split (runs/param_abuse_dataset.probe.json),
+# shardable with --shard I --nshard N:
+python tools/controls/override_slope_experiment.py --split probe --n 24 \
+  --model $M --probe-run $RUN --tag $TAG --batch 8 --max-new 1024
+python tools/controls/override_slope_experiment.py --merge   --tag $TAG
+python tools/controls/override_slope_experiment.py --analyze --tag $TAG
+python tools/controls/build_override_direction.py $RUN runs/override_slope_$TAG.json \
+  --key-suffix _achf --exclude-override firm --centre-action
+```
+
+Verified twice from fresh installs (2026-09-14 and 2026-09-24): cosine vs
+the shipped `runs/llama31-8b` pickles = +1.0000 at L12/L16/L20, sigmas
+identical to four decimals (≈44 min on two A100s). Note: `agri_battery_r2`
+scores through `tools/controls/score_dojo_soa.py` via symlinks named
+`<label>_mn4096.shardN.json` (the scorer's glob); the AutoDojo prereg lives
+at `prereg/autodojo_prereg.json` (older docstrings say `runs/autodojo/`).
+
 ## Evaluating rival defenses
 
 The same battery machinery evaluates the baselines the paper compares
