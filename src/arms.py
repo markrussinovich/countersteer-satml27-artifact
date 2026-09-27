@@ -122,7 +122,7 @@ def run_arm(model, tok, samples, *, layers=None, dirs=None, alpha=0.0, direction
             decode_dirs=None, decode_alpha=0.0, decode_sigmas=None,
             decode_scale="sigma", decode_gate=None, decode_gate_ramp=1.0,
             kv_mask=None, router_blind=None, mean_acts=None, mean_from_span=False,
-            gdn=None, early_abort_trunc=0.1):
+            gdn=None, early_abort_trunc=0.1, steer_cls=None):
     # CachePrune (arXiv:2504.21228): `kv_mask` is a steering.KVMaskSpec; the defense is a
     # PrunedKVCache passed as past_key_values, NOT a residual-stream hook, so it is
     # mutually exclusive with Steer -- running both would be two defenses in one arm.
@@ -143,8 +143,12 @@ def run_arm(model, tok, samples, *, layers=None, dirs=None, alpha=0.0, direction
                             or delta_maps is not None or decode_alpha):
         raise ValueError("gdn steering and residual steering / kv_mask are mutually "
                          "exclusive in one arm")
+    # `steer_cls` swaps in a read-only instrumented SUBCLASS of Steer (e.g. the
+    # norm-dilution RecordingSteer) while keeping the FULL production path -- the same
+    # injection seam GradSafeSteer uses in adaptive_gcg, but through run_arm itself so a
+    # component-only harness cannot diverge from what ships (seam-check rule 1).
     steer = (GdnValueSteer(model, **gdn) if gdn is not None else
-             Steer(model, layers, dirs, alpha, scale, sigmas, ablate_axes, mode,
+             (steer_cls or Steer)(model, layers, dirs, alpha, scale, sigmas, ablate_axes, mode,
                    gate_proj, gate_ramp,
                    norm_preserve, probes, tau,
                    step_rule, boundary, margin, step_scale, delta_maps,

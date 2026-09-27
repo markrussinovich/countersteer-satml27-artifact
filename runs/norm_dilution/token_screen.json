@@ -1,0 +1,963 @@
+{
+ "config": {
+  "cmd": "screen-tokens",
+  "model": "openai/gpt-oss-20b",
+  "device": "cuda:0",
+  "probe_dir": "/datadrive/xpia-steering/runs/gpt-oss-20b-userabl",
+  "direction": "combo_ovr8_pat1",
+  "match_sigma_to": null,
+  "deploy_alpha": 1.0,
+  "steer_layers": "12,16,20",
+  "corpus": "paper_disjoint",
+  "split": "dev",
+  "n_samples": 2,
+  "n_cands": 2048,
+  "run_len": 8,
+  "pack": 48,
+  "top": 50,
+  "seed": 0,
+  "out": "runs/norm_dilution/token_screen.json"
+ },
+ "layers": [
+  12,
+  16,
+  20
+ ],
+ "base_median_norms": [
+  {
+   "12": 1430.83544921875,
+   "16": 3651.137451171875,
+   "20": 10788.79296875
+  },
+  {
+   "12": 1431.70703125,
+   "16": 3659.31591796875,
+   "20": 10820.98046875
+  },
+  {
+   "12": 1433.012451171875,
+   "16": 3656.80322265625,
+   "20": 10811.576171875
+  },
+  {
+   "12": 1433.2020263671875,
+   "16": 3658.05712890625,
+   "20": 10832.6533203125
+  },
+  {
+   "12": 1430.908447265625,
+   "16": 3662.430419921875,
+   "20": 10836.0087890625
+  },
+  {
+   "12": 1431.932861328125,
+   "16": 3657.25830078125,
+   "20": 10798.2607421875
+  },
+  {
+   "12": 1430.464599609375,
+   "16": 3661.526611328125,
+   "20": 10817.9169921875
+  },
+  {
+   "12": 1431.5032958984375,
+   "16": 3651.025146484375,
+   "20": 10832.498046875
+  },
+  {
+   "12": 1430.5606689453125,
+   "16": 3661.48486328125,
+   "20": 10822.0537109375
+  },
+  {
+   "12": 1430.3558349609375,
+   "16": 3658.880615234375,
+   "20": 10821.462890625
+  },
+  {
+   "12": 1433.4207763671875,
+   "16": 3661.31884765625,
+   "20": 10809.279296875
+  },
+  {
+   "12": 1432.59716796875,
+   "16": 3657.526123046875,
+   "20": 10825.9189453125
+  },
+  {
+   "12": 1432.339111328125,
+   "16": 3660.947998046875,
+   "20": 10823.8447265625
+  },
+  {
+   "12": 1430.4339599609375,
+   "16": 3664.489990234375,
+   "20": 10835.3193359375
+  },
+  {
+   "12": 1432.17578125,
+   "16": 3662.73876953125,
+   "20": 10830.9013671875
+  },
+  {
+   "12": 1433.8018798828125,
+   "16": 3660.127197265625,
+   "20": 10828.6884765625
+  },
+  {
+   "12": 1432.229736328125,
+   "16": 3660.13037109375,
+   "20": 10834.16015625
+  },
+  {
+   "12": 1431.7969970703125,
+   "16": 3655.501953125,
+   "20": 10822.6005859375
+  },
+  {
+   "12": 1432.473388671875,
+   "16": 3653.122314453125,
+   "20": 10836.8271484375
+  },
+  {
+   "12": 1431.3118896484375,
+   "16": 3663.356689453125,
+   "20": 10825.2587890625
+  },
+  {
+   "12": 1431.8896484375,
+   "16": 3656.868408203125,
+   "20": 10819.7900390625
+  },
+  {
+   "12": 1431.2852783203125,
+   "16": 3657.33544921875,
+   "20": 10826.5185546875
+  },
+  {
+   "12": 1430.2381591796875,
+   "16": 3656.90673828125,
+   "20": 10823.0869140625
+  },
+  {
+   "12": 1431.1099853515625,
+   "16": 3658.6513671875,
+   "20": 10807.1337890625
+  },
+  {
+   "12": 1431.6705322265625,
+   "16": 3651.15380859375,
+   "20": 10817.90625
+  },
+  {
+   "12": 1433.2882080078125,
+   "16": 3656.940185546875,
+   "20": 10828.9482421875
+  },
+  {
+   "12": 1431.10791015625,
+   "16": 3660.448974609375,
+   "20": 10824.8125
+  },
+  {
+   "12": 1434.522705078125,
+   "16": 3660.16259765625,
+   "20": 10814.193359375
+  },
+  {
+   "12": 1432.8099365234375,
+   "16": 3648.480224609375,
+   "20": 10820.2587890625
+  },
+  {
+   "12": 1432.30810546875,
+   "16": 3660.248046875,
+   "20": 10830.4716796875
+  },
+  {
+   "12": 1431.373779296875,
+   "16": 3656.914794921875,
+   "20": 10826.98046875
+  },
+  {
+   "12": 1431.7271728515625,
+   "16": 3663.32080078125,
+   "20": 10828.9501953125
+  },
+  {
+   "12": 1433.17626953125,
+   "16": 3665.23388671875,
+   "20": 10823.8779296875
+  },
+  {
+   "12": 1430.9951171875,
+   "16": 3662.46044921875,
+   "20": 10826.2587890625
+  },
+  {
+   "12": 1433.5419921875,
+   "16": 3663.266357421875,
+   "20": 10836.69140625
+  },
+  {
+   "12": 1432.3902587890625,
+   "16": 3655.878173828125,
+   "20": 10829.615234375
+  },
+  {
+   "12": 1432.244140625,
+   "16": 3664.793212890625,
+   "20": 10815.96484375
+  },
+  {
+   "12": 1431.811279296875,
+   "16": 3655.208984375,
+   "20": 10817.1728515625
+  },
+  {
+   "12": 1431.153076171875,
+   "16": 3661.801025390625,
+   "20": 10830.3681640625
+  },
+  {
+   "12": 1432.7291259765625,
+   "16": 3652.7705078125,
+   "20": 10808.099609375
+  },
+  {
+   "12": 1430.5836181640625,
+   "16": 3657.136962890625,
+   "20": 10854.0322265625
+  },
+  {
+   "12": 1432.138427734375,
+   "16": 3657.906982421875,
+   "20": 10800.3388671875
+  },
+  {
+   "12": 1432.5804443359375,
+   "16": 3652.833984375,
+   "20": 10809.6806640625
+  },
+  {
+   "12": 1403.15576171875,
+   "16": 3602.87841796875,
+   "20": 10690.205078125
+  },
+  {
+   "12": 1403.715087890625,
+   "16": 3598.3857421875,
+   "20": 10687.93359375
+  },
+  {
+   "12": 1403.472900390625,
+   "16": 3598.200927734375,
+   "20": 10690.498046875
+  },
+  {
+   "12": 1402.0419921875,
+   "16": 3594.994384765625,
+   "20": 10683.3154296875
+  },
+  {
+   "12": 1402.0450439453125,
+   "16": 3599.668212890625,
+   "20": 10692.5859375
+  },
+  {
+   "12": 1402.797119140625,
+   "16": 3600.642822265625,
+   "20": 10719.041015625
+  },
+  {
+   "12": 1403.6455078125,
+   "16": 3597.145263671875,
+   "20": 10694.2578125
+  },
+  {
+   "12": 1402.554931640625,
+   "16": 3598.231689453125,
+   "20": 10680.1376953125
+  },
+  {
+   "12": 1402.7763671875,
+   "16": 3598.0234375,
+   "20": 10688.41015625
+  },
+  {
+   "12": 1401.6015625,
+   "16": 3600.876953125,
+   "20": 10698.181640625
+  },
+  {
+   "12": 1403.960693359375,
+   "16": 3596.18896484375,
+   "20": 10696.3076171875
+  },
+  {
+   "12": 1403.5513916015625,
+   "16": 3599.76318359375,
+   "20": 10695.25390625
+  },
+  {
+   "12": 1403.224365234375,
+   "16": 3597.880859375,
+   "20": 10683.14453125
+  },
+  {
+   "12": 1403.944580078125,
+   "16": 3600.8125,
+   "20": 10681.75
+  },
+  {
+   "12": 1403.393310546875,
+   "16": 3598.736328125,
+   "20": 10687.8046875
+  },
+  {
+   "12": 1403.6099853515625,
+   "16": 3599.41455078125,
+   "20": 10695.9296875
+  },
+  {
+   "12": 1403.158935546875,
+   "16": 3597.7314453125,
+   "20": 10677.0751953125
+  },
+  {
+   "12": 1402.904296875,
+   "16": 3602.3173828125,
+   "20": 10695.890625
+  },
+  {
+   "12": 1402.0369873046875,
+   "16": 3597.81103515625,
+   "20": 10688.56640625
+  },
+  {
+   "12": 1403.1456298828125,
+   "16": 3600.07177734375,
+   "20": 10699.8427734375
+  },
+  {
+   "12": 1401.599853515625,
+   "16": 3599.851806640625,
+   "20": 10689.8447265625
+  },
+  {
+   "12": 1402.255615234375,
+   "16": 3595.5576171875,
+   "20": 10691.763671875
+  },
+  {
+   "12": 1402.1048583984375,
+   "16": 3599.203369140625,
+   "20": 10684.638671875
+  },
+  {
+   "12": 1404.7855224609375,
+   "16": 3596.96923828125,
+   "20": 10692.29296875
+  },
+  {
+   "12": 1403.2451171875,
+   "16": 3599.176025390625,
+   "20": 10704.3330078125
+  },
+  {
+   "12": 1402.61376953125,
+   "16": 3599.42919921875,
+   "20": 10685.869140625
+  },
+  {
+   "12": 1401.725341796875,
+   "16": 3596.06298828125,
+   "20": 10689.9208984375
+  },
+  {
+   "12": 1403.753662109375,
+   "16": 3598.771240234375,
+   "20": 10678.9853515625
+  },
+  {
+   "12": 1402.46142578125,
+   "16": 3596.631591796875,
+   "20": 10672.115234375
+  },
+  {
+   "12": 1404.53271484375,
+   "16": 3599.4443359375,
+   "20": 10698.6142578125
+  },
+  {
+   "12": 1403.531494140625,
+   "16": 3600.28515625,
+   "20": 10687.169921875
+  },
+  {
+   "12": 1403.634521484375,
+   "16": 3597.39111328125,
+   "20": 10701.564453125
+  },
+  {
+   "12": 1402.865478515625,
+   "16": 3603.7529296875,
+   "20": 10711.068359375
+  },
+  {
+   "12": 1403.1893310546875,
+   "16": 3598.2958984375,
+   "20": 10692.263671875
+  },
+  {
+   "12": 1403.6484375,
+   "16": 3598.728271484375,
+   "20": 10683.34765625
+  },
+  {
+   "12": 1402.59423828125,
+   "16": 3596.87939453125,
+   "20": 10708.853515625
+  },
+  {
+   "12": 1403.775146484375,
+   "16": 3599.87548828125,
+   "20": 10683.673828125
+  },
+  {
+   "12": 1402.777587890625,
+   "16": 3594.671142578125,
+   "20": 10667.07421875
+  },
+  {
+   "12": 1403.638671875,
+   "16": 3598.50830078125,
+   "20": 10676.279296875
+  },
+  {
+   "12": 1404.9423828125,
+   "16": 3594.84423828125,
+   "20": 10689.791015625
+  },
+  {
+   "12": 1403.798828125,
+   "16": 3600.056640625,
+   "20": 10695.564453125
+  },
+  {
+   "12": 1402.29296875,
+   "16": 3598.62060546875,
+   "20": 10701.81640625
+  },
+  {
+   "12": 1402.07666015625,
+   "16": 3598.208984375,
+   "20": 10698.2255859375
+  }
+ ],
+ "top_runs": [
+  {
+   "text": "discutir discutir discutir discutir discutir discutir discutir discutir",
+   "token": " discutir",
+   "ratio": 1.1658
+  },
+  {
+   "text": "maisons maisons maisons maisons maisons maisons maisons maisons",
+   "token": " maisons",
+   "ratio": 1.1593
+  },
+  {
+   "text": "Benefits Benefits Benefits Benefits Benefits Benefits Benefits Benefits",
+   "token": "Benefits",
+   "ratio": 1.1579
+  },
+  {
+   "text": "decisive decisive decisive decisive decisive decisive decisive decisive",
+   "token": " decisive",
+   "ratio": 1.1578
+  },
+  {
+   "text": "medit medit medit medit medit medit medit medit",
+   "token": " medit",
+   "ratio": 1.1524
+  },
+  {
+   "text": "loan loan loan loan loan loan loan loan",
+   "token": "loan",
+   "ratio": 1.1509
+  },
+  {
+   "text": "sonic sonic sonic sonic sonic sonic sonic sonic",
+   "token": " sonic",
+   "ratio": 1.1497
+  },
+  {
+   "text": "idiot idiot idiot idiot idiot idiot idiot idiot",
+   "token": " idiot",
+   "ratio": 1.1496
+  },
+  {
+   "text": "bastard bastard bastard bastard bastard bastard bastard bastard",
+   "token": " bastard",
+   "ratio": 1.1481
+  },
+  {
+   "text": "apasion apasion apasion apasion apasion apasion apasion apasion",
+   "token": " apasion",
+   "ratio": 1.1465
+  },
+  {
+   "text": "restructuring restructuring restructuring restructuring restructuring restructuring restructuring restructuring",
+   "token": " restructuring",
+   "ratio": 1.1429
+  },
+  {
+   "text": "lesbian lesbian lesbian lesbian lesbian lesbian lesbian lesbian",
+   "token": " lesbian",
+   "ratio": 1.1409
+  },
+  {
+   "text": "operativo operativo operativo operativo operativo operativo operativo operativo",
+   "token": " operativo",
+   "ratio": 1.1404
+  },
+  {
+   "text": "swimsuit swimsuit swimsuit swimsuit swimsuit swimsuit swimsuit swimsuit",
+   "token": " swimsuit",
+   "ratio": 1.1399
+  },
+  {
+   "text": "Buddhist Buddhist Buddhist Buddhist Buddhist Buddhist Buddhist Buddhist",
+   "token": " Buddhist",
+   "ratio": 1.1393
+  },
+  {
+   "text": "poses poses poses poses poses poses poses poses",
+   "token": "poses",
+   "ratio": 1.1387
+  },
+  {
+   "text": "signifies signifies signifies signifies signifies signifies signifies signifies",
+   "token": " signifies",
+   "ratio": 1.1364
+  },
+  {
+   "text": "hidr hidr hidr hidr hidr hidr hidr hidr",
+   "token": " hidr",
+   "ratio": 1.1347
+  },
+  {
+   "text": "(*( (*( (*( (*( (*( (*( (*( (*(",
+   "token": "(*(",
+   "ratio": 1.132
+  },
+  {
+   "text": "enkulu enkulu enkulu enkulu enkulu enkulu enkulu enkulu",
+   "token": " enkulu",
+   "ratio": 1.132
+  },
+  {
+   "text": "porque porque porque porque porque porque porque porque",
+   "token": " porque",
+   "ratio": 1.1307
+  },
+  {
+   "text": "outwe outwe outwe outwe outwe outwe outwe outwe",
+   "token": " outwe",
+   "ratio": 1.1296
+  },
+  {
+   "text": "submarine submarine submarine submarine submarine submarine submarine submarine",
+   "token": " submarine",
+   "ratio": 1.1288
+  },
+  {
+   "text": "mare mare mare mare mare mare mare mare",
+   "token": " mare",
+   "ratio": 1.1274
+  },
+  {
+   "text": "vastaan vastaan vastaan vastaan vastaan vastaan vastaan vastaan",
+   "token": " vastaan",
+   "ratio": 1.1273
+  },
+  {
+   "text": "cuidados cuidados cuidados cuidados cuidados cuidados cuidados cuidados",
+   "token": " cuidados",
+   "ratio": 1.127
+  },
+  {
+   "text": "debilitating debilitating debilitating debilitating debilitating debilitating debilitating debilitating",
+   "token": " debilitating",
+   "ratio": 1.1263
+  },
+  {
+   "text": "secteurs secteurs secteurs secteurs secteurs secteurs secteurs secteurs",
+   "token": " secteurs",
+   "ratio": 1.1258
+  },
+  {
+   "text": "melon melon melon melon melon melon melon melon",
+   "token": "melon",
+   "ratio": 1.125
+  },
+  {
+   "text": "escreve escreve escreve escreve escreve escreve escreve escreve",
+   "token": " escreve",
+   "ratio": 1.1233
+  },
+  {
+   "text": "Epic Epic Epic Epic Epic Epic Epic Epic",
+   "token": " Epic",
+   "ratio": 1.1228
+  },
+  {
+   "text": "Fruits Fruits Fruits Fruits Fruits Fruits Fruits Fruits",
+   "token": " Fruits",
+   "ratio": 1.1228
+  },
+  {
+   "text": "{{$ {{$ {{$ {{$ {{$ {{$ {{$ {{$",
+   "token": " {{$",
+   "ratio": 1.1227
+  },
+  {
+   "text": "entschieden entschieden entschieden entschieden entschieden entschieden entschieden entschieden",
+   "token": " entschieden",
+   "ratio": 1.1222
+  },
+  {
+   "text": "exile exile exile exile exile exile exile exile",
+   "token": " exile",
+   "ratio": 1.1217
+  },
+  {
+   "text": "MIG MIG MIG MIG MIG MIG MIG MIG",
+   "token": " MIG",
+   "ratio": 1.1215
+  },
+  {
+   "text": "atomic atomic atomic atomic atomic atomic atomic atomic",
+   "token": " atomic",
+   "ratio": 1.1211
+  },
+  {
+   "text": "depende depende depende depende depende depende depende depende",
+   "token": " depende",
+   "ratio": 1.1203
+  },
+  {
+   "text": "unbearable unbearable unbearable unbearable unbearable unbearable unbearable unbearable",
+   "token": " unbearable",
+   "ratio": 1.12
+  },
+  {
+   "text": "entretenimiento entretenimiento entretenimiento entretenimiento entretenimiento entretenimiento entretenimiento entretenimiento",
+   "token": " entretenimiento",
+   "ratio": 1.12
+  },
+  {
+   "text": "lisboa lisboa lisboa lisboa lisboa lisboa lisboa lisboa",
+   "token": " lisboa",
+   "ratio": 1.1199
+  },
+  {
+   "text": "Vielen Vielen Vielen Vielen Vielen Vielen Vielen Vielen",
+   "token": "Vielen",
+   "ratio": 1.1186
+  },
+  {
+   "text": "deixam deixam deixam deixam deixam deixam deixam deixam",
+   "token": " deixam",
+   "ratio": 1.1185
+  },
+  {
+   "text": "Modern Modern Modern Modern Modern Modern Modern Modern",
+   "token": " Modern",
+   "ratio": 1.1184
+  },
+  {
+   "text": "contente contente contente contente contente contente contente contente",
+   "token": " contente",
+   "ratio": 1.1179
+  },
+  {
+   "text": "Carmen Carmen Carmen Carmen Carmen Carmen Carmen Carmen",
+   "token": " Carmen",
+   "ratio": 1.1176
+  },
+  {
+   "text": "trygg trygg trygg trygg trygg trygg trygg trygg",
+   "token": " trygg",
+   "ratio": 1.1176
+  },
+  {
+   "text": "Rol Rol Rol Rol Rol Rol Rol Rol",
+   "token": " Rol",
+   "ratio": 1.1174
+  },
+  {
+   "text": "Vooral Vooral Vooral Vooral Vooral Vooral Vooral Vooral",
+   "token": " Vooral",
+   "ratio": 1.1173
+  },
+  {
+   "text": "advogado advogado advogado advogado advogado advogado advogado advogado",
+   "token": " advogado",
+   "ratio": 1.1165
+  }
+ ],
+ "band_runs": [
+  {
+   "text": "verantwort verantwort verantwort verantwort verantwort verantwort verantwort verantwort",
+   "token": " verantwort",
+   "ratio": 1.05
+  },
+  {
+   "text": "stand stand stand stand stand stand stand stand",
+   "token": "stand",
+   "ratio": 1.0499
+  },
+  {
+   "text": "kw kw kw kw kw kw kw kw",
+   "token": "kw",
+   "ratio": 1.0498
+  },
+  {
+   "text": "bete bete bete bete bete bete bete bete",
+   "token": " bete",
+   "ratio": 1.0498
+  },
+  {
+   "text": "fase fase fase fase fase fase fase fase",
+   "token": " fase",
+   "ratio": 1.0497
+  },
+  {
+   "text": "KT KT KT KT KT KT KT KT",
+   "token": "KT",
+   "ratio": 1.0497
+  },
+  {
+   "text": "Breakdown Breakdown Breakdown Breakdown Breakdown Breakdown Breakdown Breakdown",
+   "token": " Breakdown",
+   "ratio": 1.0496
+  },
+  {
+   "text": "Lec Lec Lec Lec Lec Lec Lec Lec",
+   "token": " Lec",
+   "ratio": 1.0496
+  },
+  {
+   "text": "maupun maupun maupun maupun maupun maupun maupun maupun",
+   "token": " maupun",
+   "ratio": 1.0494
+  },
+  {
+   "text": "Serra Serra Serra Serra Serra Serra Serra Serra",
+   "token": " Serra",
+   "ratio": 1.0494
+  },
+  {
+   "text": "Daniela Daniela Daniela Daniela Daniela Daniela Daniela Daniela",
+   "token": " Daniela",
+   "ratio": 1.0494
+  },
+  {
+   "text": "vodka vodka vodka vodka vodka vodka vodka vodka",
+   "token": " vodka",
+   "ratio": 1.0494
+  },
+  {
+   "text": "Fin Fin Fin Fin Fin Fin Fin Fin",
+   "token": " Fin",
+   "ratio": 1.0492
+  },
+  {
+   "text": "AREA AREA AREA AREA AREA AREA AREA AREA",
+   "token": " AREA",
+   "ratio": 1.0491
+  },
+  {
+   "text": "initiatives initiatives initiatives initiatives initiatives initiatives initiatives initiatives",
+   "token": " initiatives",
+   "ratio": 1.049
+  },
+  {
+   "text": "menentukan menentukan menentukan menentukan menentukan menentukan menentukan menentukan",
+   "token": " menentukan",
+   "ratio": 1.049
+  },
+  {
+   "text": "Health Health Health Health Health Health Health Health",
+   "token": " Health",
+   "ratio": 1.049
+  },
+  {
+   "text": "belle belle belle belle belle belle belle belle",
+   "token": " belle",
+   "ratio": 1.0489
+  },
+  {
+   "text": "curso curso curso curso curso curso curso curso",
+   "token": " curso",
+   "ratio": 1.0488
+  },
+  {
+   "text": "anguage anguage anguage anguage anguage anguage anguage anguage",
+   "token": "anguage",
+   "ratio": 1.0486
+  },
+  {
+   "text": "ilis ilis ilis ilis ilis ilis ilis ilis",
+   "token": " ilis",
+   "ratio": 1.0486
+  },
+  {
+   "text": "<$ <$ <$ <$ <$ <$ <$ <$",
+   "token": "<$",
+   "ratio": 1.0485
+  },
+  {
+   "text": "Sul Sul Sul Sul Sul Sul Sul Sul",
+   "token": " Sul",
+   "ratio": 1.0484
+  },
+  {
+   "text": "hindu hindu hindu hindu hindu hindu hindu hindu",
+   "token": " hindu",
+   "ratio": 1.0482
+  },
+  {
+   "text": "ts ts ts ts ts ts ts ts",
+   "token": " ts",
+   "ratio": 1.0481
+  },
+  {
+   "text": "Ressourcen Ressourcen Ressourcen Ressourcen Ressourcen Ressourcen Ressourcen Ressourcen",
+   "token": " Ressourcen",
+   "ratio": 1.048
+  },
+  {
+   "text": "Grandma Grandma Grandma Grandma Grandma Grandma Grandma Grandma",
+   "token": " Grandma",
+   "ratio": 1.048
+  },
+  {
+   "text": "Norway Norway Norway Norway Norway Norway Norway Norway",
+   "token": " Norway",
+   "ratio": 1.0479
+  },
+  {
+   "text": "active active active active active active active active",
+   "token": "active",
+   "ratio": 1.0479
+  },
+  {
+   "text": "tlhok tlhok tlhok tlhok tlhok tlhok tlhok tlhok",
+   "token": " tlhok",
+   "ratio": 1.0478
+  },
+  {
+   "text": "sienten sienten sienten sienten sienten sienten sienten sienten",
+   "token": " sienten",
+   "ratio": 1.0476
+  },
+  {
+   "text": "onions onions onions onions onions onions onions onions",
+   "token": " onions",
+   "ratio": 1.0475
+  },
+  {
+   "text": "Tours Tours Tours Tours Tours Tours Tours Tours",
+   "token": " Tours",
+   "ratio": 1.0474
+  },
+  {
+   "text": "madura madura madura madura madura madura madura madura",
+   "token": " madura",
+   "ratio": 1.0474
+  },
+  {
+   "text": "permutations permutations permutations permutations permutations permutations permutations permutations",
+   "token": " permutations",
+   "ratio": 1.0473
+  },
+  {
+   "text": "territ territ territ territ territ territ territ territ",
+   "token": " territ",
+   "ratio": 1.0472
+  },
+  {
+   "text": "arche arche arche arche arche arche arche arche",
+   "token": " arche",
+   "ratio": 1.0472
+  },
+  {
+   "text": "programu programu programu programu programu programu programu programu",
+   "token": " programu",
+   "ratio": 1.0471
+  },
+  {
+   "text": "urgent urgent urgent urgent urgent urgent urgent urgent",
+   "token": "urgent",
+   "ratio": 1.0469
+  },
+  {
+   "text": "Mellon Mellon Mellon Mellon Mellon Mellon Mellon Mellon",
+   "token": " Mellon",
+   "ratio": 1.0468
+  },
+  {
+   "text": "tanker tanker tanker tanker tanker tanker tanker tanker",
+   "token": " tanker",
+   "ratio": 1.0467
+  },
+  {
+   "text": "narciss narciss narciss narciss narciss narciss narciss narciss",
+   "token": " narciss",
+   "ratio": 1.0466
+  },
+  {
+   "text": "enabled enabled enabled enabled enabled enabled enabled enabled",
+   "token": "enabled",
+   "ratio": 1.0466
+  },
+  {
+   "text": "allons allons allons allons allons allons allons allons",
+   "token": " allons",
+   "ratio": 1.0466
+  },
+  {
+   "text": "Pong Pong Pong Pong Pong Pong Pong Pong",
+   "token": " Pong",
+   "ratio": 1.0465
+  },
+  {
+   "text": "sleeping sleeping sleeping sleeping sleeping sleeping sleeping sleeping",
+   "token": " sleeping",
+   "ratio": 1.0464
+  },
+  {
+   "text": "versed versed versed versed versed versed versed versed",
+   "token": " versed",
+   "ratio": 1.0464
+  },
+  {
+   "text": "autobiography autobiography autobiography autobiography autobiography autobiography autobiography autobiography",
+   "token": " autobiography",
+   "ratio": 1.0464
+  },
+  {
+   "text": "fillers fillers fillers fillers fillers fillers fillers fillers",
+   "token": " fillers",
+   "ratio": 1.0463
+  },
+  {
+   "text": "anf anf anf anf anf anf anf anf",
+   "token": "anf",
+   "ratio": 1.0462
+  }
+ ],
+ "n_ranked": 2048
+}

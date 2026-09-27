@@ -181,6 +181,44 @@ batteries are in the paper; the artifacts behind them ship under `runs/`.
   `runs/gcg_param_rsn/seam_replay/` is a disclosure sidecar: a fresh-process static-arm
   replay (script + 4 outputs) showing the two param-run static arms differ only by
   process-history numerics.
+- `tools/controls/norm_dilution_attack.py` — the norm-dilution mechanism attack on the
+  norm-preserving edit (pre-registered; paper §V-C + Appendix C: attacker text cannot
+  inflate instruction-token residual norms enough to dilute the edit's rotation —
+  1.006× achievable vs the sufficient 1.25× first laddered). Subcommands: `build`
+  (mutated corpora, replay + scorer-evidence-set guards), `screen-tokens` (replay-safe
+  vocabulary runs ranked by in-context block-output norm), `profile` (per-token
+  pre-edit norm + realized rotation through `run_arm` via the `steer_cls` seam in
+  `src/arms.py`, read-only recorder), `spotcheck-batch` (measured batch-shape
+  equivalence of the κ medians), `arms` (ONE-process behavioral comparison incl. the
+  in-process dose ladder; `--selfcheck` default-on proves the recorder byte-inert),
+  `report` (four-arm table, Wilson + within-process McNemar, censors aborted arms).
+  Artifacts: `runs/norm_dilution/` + the S0b dose ladders under `gpt-oss-20b-userabl/`.
+
+  Reproduce the paper's norm-dilution numbers from the shipped artifacts (CPU, seconds):
+  ```bash
+  .venv/bin/python tools/controls/norm_dilution_attack.py report \
+    --arms runs/norm_dilution/smoke24_disjoint_mn4096.json \
+           runs/norm_dilution/smoke24_param_mn4096.json \
+    --profile runs/norm_dilution/profile_disjoint.json runs/norm_dilution/profile_param.json \
+    --dose-artifact runs/gpt-oss-20b-userabl/results_add-combo-ovr8-pat1-3816428.json
+  ```
+  (Expected: disjoint static:def@1.0 = f4_space_prefix:def@1.0 = 0/24; param 3/24 =
+  3/24, McNemar p=1.0; κ tables with menu-best kappa_instr 1.006. The 1024-budget
+  smokes `smoke24_{disjoint,param}.json` and the corpus-matched ladders
+  `results_add-combo-ovr8-pat1-{3515002,3514999}*` are shipped beside them.)
+
+  Reproduce the paper's AD@k curves (Fig. 3), k = 0..6 (CPU, ~1 min per k):
+  ```bash
+  for k in 0 1 2 3 4 5 6; do
+    .venv/bin/python tools/controls/autodojo_score.py --root runs/autodojo/harvest4/merged \
+      --prereg prereg/autodojo_prereg.json --expect-plan --iter-cap $k | grep " ALL "
+    .venv/bin/python tools/controls/autodojo_score.py --root runs/autodojo/agri \
+      --prereg prereg/autodojo_prereg.json --iter-cap $k | grep " ALL "
+  done
+  ```
+  (Expected at k=6: gpt-oss-20b-undefended 0.673, -defended 0.175, gptoss-secalign
+  0.160, -agri 0.143 — the Fig. 3 endpoints; score `harvest4/merged`, never the
+  harvest root, whose quarantined uncapped duplicates shift undefended by 0.0125.)
 - `runs/symtest/` — test-split baseline symmetrization: CachePrune and the add-combo
   deployed cell re-run on the held-out test split in the same process as their own
   undefended anchors (result + full-completions files per job).
@@ -219,6 +257,7 @@ writes them). Paths mirror the provenance comments in the paper sources.
 | `adaptive_framing.shard*`, `qwen_adaptive_framing.shard*`, `adaptive_param_{none,spotlight}.json`, `adaptive_param_cacheprune.shard*`, `secalign_adaptive_{param.shard*,tool}.json` | defense-aware adaptive query attacks (framing search, five-arm parameter-manipulation table) |
 | `whitebox_deployed/`, `gcg_harvest/named-outputs/blob/`, `qwen_adaptive_leg2b.*`, `qwen_adaptive_leg3.*` (beside the shipped `gcg_n52/`, `gcg_param/`, `gcg_param_rsn/`) | GCG white-box / surrogate arms and the Qwen adaptive legs |
 | `llmail_replay/` (gpt-oss dev+test shards), `llmail_qwen_scale/` | LLMail-Inject replay (0/2052 gpt-oss, 0/1537 Qwen) |
+| `norm_dilution/` (token screen, mutated corpora + static draws, per-token norm/rotation profiles, behavioral smokes at 1024 and de-censored 4096 budgets, batch spotcheck) + `gpt-oss-20b-userabl/results_add-combo-ovr8-pat1-{3514999,3515002,3816428}*` (dose ladders) | norm-dilution mechanism attack (paper §V-C, Appendix C) |
 | `relay_multiturn.shard{0..3}.json`, `gpt-oss-20b-userabl/results_add-combo-ovr8-pat1-30533{80..83}*` | relay-attack rung |
 | `gpt-oss-20b-userabl/results_add-combo-ovr8-pat1-scopeP4-*-62771{2,3}*` | search-budget appendix's deployed readings |
 

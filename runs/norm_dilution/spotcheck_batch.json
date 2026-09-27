@@ -1,0 +1,131 @@
+{
+ "config": {
+  "cmd": "spotcheck-batch",
+  "model": "openai/gpt-oss-20b",
+  "device": "cuda:0",
+  "probe_dir": "/datadrive/xpia-steering/runs/gpt-oss-20b-userabl",
+  "direction": "combo_ovr8_pat1",
+  "match_sigma_to": null,
+  "deploy_alpha": 1.0,
+  "steer_layers": "12,16,20",
+  "corpus_files": "runs/norm_dilution/paper_disjoint.dev.static.json",
+  "batches": "1,12",
+  "out": "runs/norm_dilution/spotcheck_batch.json"
+ },
+ "batches": [
+  1,
+  12
+ ],
+ "rows": [
+  {
+   "layer": 12,
+   "sample": "rc-1",
+   "median_ratio": 1.000064,
+   "rel_median": 0.003836,
+   "rel_p90": 0.029711,
+   "rel_max": 0.705069,
+   "frac_gt_2pct": 0.1482
+  },
+  {
+   "layer": 12,
+   "sample": "rc-2",
+   "median_ratio": 0.999277,
+   "rel_median": 0.003169,
+   "rel_p90": 0.023646,
+   "rel_max": 0.442044,
+   "frac_gt_2pct": 0.119
+  },
+  {
+   "layer": 12,
+   "sample": "rc-3",
+   "median_ratio": 0.999533,
+   "rel_median": 0.003656,
+   "rel_p90": 0.027403,
+   "rel_max": 0.949158,
+   "frac_gt_2pct": 0.1417
+  },
+  {
+   "layer": 12,
+   "sample": "rc-4",
+   "median_ratio": 0.99894,
+   "rel_median": 0.00365,
+   "rel_p90": 0.027478,
+   "rel_max": 0.571632,
+   "frac_gt_2pct": 0.1307
+  },
+  {
+   "layer": 16,
+   "sample": "rc-1",
+   "median_ratio": 1.000259,
+   "rel_median": 0.004289,
+   "rel_p90": 0.029929,
+   "rel_max": 0.46085,
+   "frac_gt_2pct": 0.1482
+  },
+  {
+   "layer": 16,
+   "sample": "rc-2",
+   "median_ratio": 0.997355,
+   "rel_median": 0.00362,
+   "rel_p90": 0.023022,
+   "rel_max": 0.406084,
+   "frac_gt_2pct": 0.1172
+  },
+  {
+   "layer": 16,
+   "sample": "rc-3",
+   "median_ratio": 0.998679,
+   "rel_median": 0.004558,
+   "rel_p90": 0.028106,
+   "rel_max": 0.669171,
+   "frac_gt_2pct": 0.151
+  },
+  {
+   "layer": 16,
+   "sample": "rc-4",
+   "median_ratio": 1.001804,
+   "rel_median": 0.004722,
+   "rel_p90": 0.027253,
+   "rel_max": 0.450061,
+   "frac_gt_2pct": 0.1379
+  },
+  {
+   "layer": 20,
+   "sample": "rc-1",
+   "median_ratio": 0.999743,
+   "rel_median": 0.004458,
+   "rel_p90": 0.0275,
+   "rel_max": 0.293678,
+   "frac_gt_2pct": 0.1439
+  },
+  {
+   "layer": 20,
+   "sample": "rc-2",
+   "median_ratio": 0.999256,
+   "rel_median": 0.004041,
+   "rel_p90": 0.022007,
+   "rel_max": 0.225141,
+   "frac_gt_2pct": 0.1114
+  },
+  {
+   "layer": 20,
+   "sample": "rc-3",
+   "median_ratio": 1.001394,
+   "rel_median": 0.004503,
+   "rel_p90": 0.025594,
+   "rel_max": 0.243141,
+   "frac_gt_2pct": 0.1318
+  },
+  {
+   "layer": 20,
+   "sample": "rc-4",
+   "median_ratio": 1.00225,
+   "rel_median": 0.004574,
+   "rel_p90": 0.026628,
+   "rel_max": 0.272582,
+   "frac_gt_2pct": 0.1363
+  }
+ ],
+ "worst_abs_median_ratio_dev": 0.002645,
+ "verdict": "PASS"
+}
