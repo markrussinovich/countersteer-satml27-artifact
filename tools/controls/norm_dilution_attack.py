@@ -820,6 +820,11 @@ def cmd_report(a):
         d = json.load(open(path))
         Ls = d["layers"]
         print(f"\n=== {path} (kappa_instr / rot_ratio / spillover, median) ===")
+        best = max(((float(np.mean([c["agg"][f"L{L}"].get("kappa_instr") or 0
+                                    for L in Ls])), n)
+                    for n, c in d["constructions"].items() if n != "static"),
+                   default=(0, "-"))
+        print(f"  menu-best mean kappa_instr: {best[1]} = {best[0]:.4f}")
         for name, c in d["constructions"].items():
             if name == "static":
                 print(f"{'static':28s} span rot "

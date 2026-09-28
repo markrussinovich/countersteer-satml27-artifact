@@ -36,6 +36,9 @@ the canonical scorers, and fitted directions for the evaluated models.
 
 ## Install
 
+> Python 3.12 is required and absent on stock Ubuntu 22.04; any install
+> route works (`uv python install 3.12`, deadsnakes, or conda).
+
 Python 3.12, one CUDA GPU (a 24 GB card suffices for the Llama-3.1-8B
 quickstart; gpt-oss-20b wants 80 GB). Pinned versions are the ones that
 produced the paper's numbers.
@@ -64,6 +67,13 @@ scores it with the canonical scorer (the severity-ordered headline block):
 
 `--n-eval 52 --stage sweep` reproduces a development rung; `--stage confirm`
 touches the held-out test split (one preregistered pass — do not rerun).
+
+Smoke expectations: at `--n-eval 8` the gpt-oss defended row may print
+`CENSORED (ABORTED-FUTILITY)` at the smoke's 1024-token budget (honest
+censoring, not a failure), and thin-base models can flag
+`[INVALID] base-XPIA attack rate is 0.000` (binomial noise at n=8). The
+Qwen3-30B smoke is ~40 min (thinking model, 4096-token turns); the others
+are 3-15 min.
 Small slices prove the pipeline, not the numbers. The scorer's optional LLM
 drift adjudicator needs `XPIA_JUDGE_ENDPOINT`; every headline number is
 deterministic without it. Configs for all five models (gpt-oss-20b,
@@ -203,7 +213,8 @@ batteries are in the paper; the artifacts behind them ship under `runs/`.
     --dose-artifact runs/gpt-oss-20b-userabl/results_add-combo-ovr8-pat1-3816428.json
   ```
   (Expected: disjoint static:def@1.0 = f4_space_prefix:def@1.0 = 0/24; param 3/24 =
-  3/24, McNemar p=1.0; κ tables with menu-best kappa_instr 1.006. The 1024-budget
+  3/24, McNemar p=1.0; the profile blocks end with `menu-best mean kappa_instr:
+  f4_space_prefix = 1.006x` per corpus. The 1024-budget
   smokes `smoke24_{disjoint,param}.json` and the corpus-matched ladders
   `results_add-combo-ovr8-pat1-{3515002,3514999}*` are shipped beside them.)
 
@@ -216,8 +227,9 @@ batteries are in the paper; the artifacts behind them ship under `runs/`.
       --prereg prereg/autodojo_prereg.json --iter-cap $k | grep " ALL "
   done
   ```
-  (Expected at k=6: gpt-oss-20b-undefended 0.673, -defended 0.175, gptoss-secalign
-  0.160, -agri 0.143 — the Fig. 3 endpoints; score `harvest4/merged`, never the
+  (The grep prints ~20 arms per k; the four Fig. 3 endpoints at k=6 are
+  gpt-oss-20b-undefended 0.673, -defended 0.175, gptoss-secalign 0.160,
+  -agri 0.143; score `harvest4/merged`, never the
   harvest root, whose quarantined uncapped duplicates shift undefended by 0.0125.)
 - `runs/symtest/` — test-split baseline symmetrization: CachePrune and the add-combo
   deployed cell re-run on the held-out test split in the same process as their own

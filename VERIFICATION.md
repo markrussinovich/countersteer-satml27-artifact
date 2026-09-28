@@ -1,3 +1,9 @@
+> Addendum 2026-09-28: this record is the 2026-09-10 clean-room review of an
+> earlier tree. Its finding 1 (scorer requiring a judge endpoint) is fixed —
+> `evaluate.sh` passes `--no-adjudicate`. A fresh naive-user reproduction of
+> the current tree (install, quickstart, norm-dilution and AD@k recomputes,
+> two eval smokes) passed end-to-end on 2026-09-28.
+
 # Release verification — clean-install run-through (2026-09-10)
 
 Verified the exported public release at `/datadrive/countersteer` from a fresh install,
